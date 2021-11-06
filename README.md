@@ -1,10 +1,7 @@
 # nyxx_lavalink
 
-[![pub](https://img.shields.io/pub/v/nyxx.svg)](https://pub.dartlang.org/packages/nyxx)
-[![documentation](https://img.shields.io/badge/Documentation-nyxx-yellow.svg)](https://www.dartdocs.org/documentation/nyxx/latest/)
-[![documentation](https://img.shields.io/badge/Documentation-nyxx.commander-yellow.svg)](https://www.dartdocs.org/documentation/nyxx.commander/latest/)
-[![documentation](https://img.shields.io/badge/Documentation-nyxx.interactions-yellow.svg)](https://www.dartdocs.org/documentation/nyxx.interactions/latest/)
-[![documentation](https://img.shields.io/badge/Documentation-nyxx.extentions-yellow.svg)](https://www.dartdocs.org/documentation/nyxx.extensions/latest/)
+[![pub](https://img.shields.io/pub/v/nyxx_lavalink.svg)](https://pub.dartlang.org/packages/nyxx_lavalink)
+[![documentation](https://img.shields.io/badge/Documentation-nyxx_lavalink-yellow.svg)](https://www.dartdocs.org/documentation/nyxx_lavalink/latest/)
 
 Simple, robust framework for creating discord bots for Dart language.
 

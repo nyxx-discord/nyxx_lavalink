@@ -1,4 +1,4 @@
-part of nyxx_lavalink;
+import 'package:nyxx/nyxx.dart';
 
 /// Search platforms supported by Lavalink
 class SearchPlatform extends IEnum<String> {
