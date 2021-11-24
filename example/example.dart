@@ -4,7 +4,12 @@ import "package:nyxx_lavalink/nyxx_lavalink.dart";
 import "package:nyxx/nyxx.dart";
 
 void main() async {
-  final client = NyxxFactory.createNyxxWebsocket(Platform.environment["DISCORD_TOKEN"]!, GatewayIntents.allUnprivileged);
+  final client = NyxxFactory.createNyxxWebsocket("<TOKEN>", GatewayIntents.allUnprivileged)
+    ..registerPlugin(Logging()) // Default logging plugin
+    ..registerPlugin(CliIntegration()) // Cli integration for nyxx allows stopping application via SIGTERM and SIGKILl
+    ..registerPlugin(IgnoreExceptions()) // Plugin that handles uncaught exceptions that may occur
+    ..connect();
+
   final cluster = ICluster.createCluster(client, Snowflake("YOUR_BOT_ID"));
 
   // This is a really simple example, so we'll define the guild and
