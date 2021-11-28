@@ -68,6 +68,7 @@ class PlayParameters implements IPlayParameters {
   PlayParameters(this._node, this.track, this.guildId, this.replace, this.startTime, this.endTime, this.requester, this.channelId);
 
   /// Forces the song to start playing
+  @override
   void startPlaying() {
     if (endTime == null) {
       (_node as Node).sendPayload("play", guildId, {"track": track.track, "noReplace": !replace, "startTime": startTime.inMilliseconds});
@@ -79,6 +80,7 @@ class PlayParameters implements IPlayParameters {
   }
 
   /// Puts the track on the queue and starts playing if necessary
+  @override
   void queue() {
     final player = (_node as Node).players[guildId];
 

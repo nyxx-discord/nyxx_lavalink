@@ -28,7 +28,7 @@ import 'node_options.dart';
 */
 Future<void> handleNode(SendPort clusterPort) async {
   WebSocket? socket;
-  StreamSubscription? socketStream;
+  StreamSubscription<dynamic>? socketStream;
 
   // First thing to do is to return a send port to the cluster to communicate with the node
   final receivePort = ReceivePort();
