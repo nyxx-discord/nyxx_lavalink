@@ -12,17 +12,19 @@ jobs:
     env:
       TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
     steps:
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.pub_cache
-          key: ${{ runner.os }}
-
       - name: Setup Dart Action
         uses: dart-lang/setup-dart@v1
 
       - name: Checkout
         uses: actions/checkout@v2.3.4
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pubspec-
 
       - name: Install dependencies
         run: dart pub get
@@ -36,17 +38,19 @@ jobs:
     env:
       TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
     steps:
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.pub_cache
-          key: ${{ runner.os }}
-
       - name: Setup Dart Action
         uses: dart-lang/setup-dart@v1
 
       - name: Checkout
         uses: actions/checkout@v2.3.4
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pubspec-
 
       - name: Install dependencies
         run: dart pub get
@@ -61,12 +65,6 @@ jobs:
     env:
       TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
     steps:
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.pub_cache
-          key: ${{ runner.os }}
-
       - name: Setup Dart Action
         uses: dart-lang/setup-dart@v1
 
@@ -76,15 +74,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
 
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pubspec-
+
       - name: Install dependencies
         run: dart pub get
 
       - name: Unit tests
         run: dart run test --coverage="coverage" test/unit/**
-
-      - name: Integration tests
-        run: dart run test --coverage="coverage" test/integration/**
-        continue-on-error: true
 
       - name: Format coverage
         run: dart run coverage:format_coverage --lcov --in=coverage --out=coverage/coverage.lcov --packages=.packages --report-on=lib
