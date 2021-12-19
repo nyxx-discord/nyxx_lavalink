@@ -1,10 +1,39 @@
-# Files and directories created by pub.
-.dart_tool/
+local/
+.atom/
+.vscode/
+index.html
+docs/
+.buildlog
 .packages
-
-# Conventional directory for build outputs.
-build/
-
-# Omit committing pubspec.lock for library packages; see
-# https://dart.dev/guides/libraries/private-files#pubspeclock.
+.project
+.pub
+**/build
+**/packages
+*.dart.js
+*.part.js
+*.js.deps
+*.js.map
+*.info.json
+doc/api/
+pubspec.lock
+*.iml
+.idea
+*~
+*#
+.#*
+.dart_tool/
+/README.html
+/log.txt
+/nyxx.wiki/
+/test/private.dart
+/publish_docs.sh
+/test/mirrors.dart
+/private
+private-*.dart
+test-*.dart
+[Rr]pc*
+**/doc/api/**
+**/coverage/**
+coverage.json
+lcov.info
 pubspec.lock

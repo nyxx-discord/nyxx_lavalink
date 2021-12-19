@@ -1,4 +1,9 @@
-part of nyxx_lavalink;
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'dart:isolate';
+import 'node_options.dart';
 
 /*
   The actual node runner
@@ -21,16 +26,16 @@ part of nyxx_lavalink;
   * EXITED - Node shutdown itself
   * LOG - Log something
 */
-Future<void> _handleNode(SendPort clusterPort) async {
+Future<void> handleNode(SendPort clusterPort) async {
   WebSocket? socket;
-  StreamSubscription? socketStream;
+  StreamSubscription<dynamic>? socketStream;
 
   // First thing to do is to return a send port to the cluster to communicate with the node
   final receivePort = ReceivePort();
   final receiveStream = receivePort.asBroadcastStream();
   clusterPort.send(receivePort.sendPort);
 
-  var node = NodeOptions._fromJson(await receiveStream.first as Map<String, dynamic>);
+  var node = NodeOptions.fromJson(await receiveStream.first as Map<String, dynamic>);
 
   void process(Map<String, dynamic> json) {
     if (json["op"] == "event") {
@@ -46,38 +51,41 @@ Future<void> _handleNode(SendPort clusterPort) async {
 
     while (actualAttempt < node.maxConnectAttempts) {
       try {
-        clusterPort.send({"cmd": "LOG", "nodeId": node.nodeId, "level": "INFO", "message": "[Node ${node.nodeId}] Trying to connect to lavalink ($actualAttempt/${node.maxConnectAttempts})"});
+        clusterPort.send({
+          "cmd": "LOG",
+          "nodeId": node.nodeId,
+          "level": "INFO",
+          "message": "[Node ${node.nodeId}] Trying to connect to lavalink ($actualAttempt/${node.maxConnectAttempts})"
+        });
 
-        await WebSocket.connect(address, headers: {
-          "Authorization": node.password,
-          "Num-Shards": node.shards,
-          "User-Id": node.clientId.id
-        }).then((ws) {
+        await WebSocket.connect(address, headers: {"Authorization": node.password, "Num-Shards": node.shards, "User-Id": node.clientId.id}).then((ws) {
           clusterPort.send({"cmd": "CONNECTED", "nodeId": node.nodeId});
 
           socket = ws;
 
-          socketStream = socket!.listen((data) {
-            process(jsonDecode(data as String) as Map<String, dynamic>);
-          }, onDone: () async {
-            clusterPort.send({"cmd": "DISCONNECTED", "nodeId": node.nodeId});
-            await connect();
+          socketStream = socket!.listen(
+              (data) {
+                process(jsonDecode(data as String) as Map<String, dynamic>);
+              },
+              onDone: () async {
+                clusterPort.send({"cmd": "DISCONNECTED", "nodeId": node.nodeId});
+                await connect();
 
-            return;
-          },
+                return;
+              },
               cancelOnError: true,
               onError: (err) {
                 clusterPort.send({"cmd": "ERROR", "nodeId": node.nodeId, "code": socket!.closeCode, "reason": socket!.closeReason});
-              }
-          );
+              });
 
           return;
         });
 
         return;
-      // ignore: avoid_catches_without_on_clauses
+        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
-        clusterPort.send({"cmd": "LOG", "nodeId": node.nodeId, "level": "WARNING", "message": "[Node ${node.nodeId}] Error while trying to connect to lavalink; $e"});
+        clusterPort
+            .send({"cmd": "LOG", "nodeId": node.nodeId, "level": "WARNING", "message": "[Node ${node.nodeId}] Error while trying to connect to lavalink; $e"});
       }
 
       clusterPort.send({"cmd": "LOG", "nodeId": node.nodeId, "level": "WARNING", "message": "[Node ${node.nodeId}] Failed to connect to lavalink, retrying"});
@@ -114,7 +122,7 @@ Future<void> _handleNode(SendPort clusterPort) async {
         break;
 
       case "UPDATE":
-        node = NodeOptions._fromJson(msg["data"] as Map<String, dynamic>);
+        node = NodeOptions.fromJson(msg["data"] as Map<String, dynamic>);
         await reconnect();
         break;
 
@@ -126,13 +134,14 @@ Future<void> _handleNode(SendPort clusterPort) async {
         await reconnect();
         break;
 
-      case "SHUTDOWN": {
-        clusterPort.send({"cmd": "EXITED", "nodeId": node.nodeId});
-        await disconnect();
-        receivePort.close();
-        Isolate.current.kill(priority: Isolate.immediate);
-      }
-      break;
+      case "SHUTDOWN":
+        {
+          clusterPort.send({"cmd": "EXITED", "nodeId": node.nodeId});
+          await disconnect();
+          receivePort.close();
+          Isolate.current.kill(priority: Isolate.immediate);
+        }
+        break;
 
       default:
         break;

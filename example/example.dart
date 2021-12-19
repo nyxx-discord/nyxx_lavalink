@@ -1,11 +1,16 @@
 import "dart:io";
 
-import "package:nyxx_lavalink/lavalink.dart";
+import "package:nyxx_lavalink/nyxx_lavalink.dart";
 import "package:nyxx/nyxx.dart";
 
 void main() async {
-  final client = Nyxx(Platform.environment["DISCORD_TOKEN"]!, GatewayIntents.allUnprivileged);
-  final cluster = Cluster(client, Snowflake("YOUR_BOT_ID"));
+  final client = NyxxFactory.createNyxxWebsocket("<TOKEN>", GatewayIntents.allUnprivileged)
+    ..registerPlugin(Logging()) // Default logging plugin
+    ..registerPlugin(CliIntegration()) // Cli integration for nyxx allows stopping application via SIGTERM and SIGKILl
+    ..registerPlugin(IgnoreExceptions()) // Plugin that handles uncaught exceptions that may occur
+    ..connect();
+
+  final cluster = ICluster.createCluster(client, Snowflake("YOUR_BOT_ID"));
 
   // This is a really simple example, so we'll define the guild and
   // the channel where the bot will play music on
@@ -15,9 +20,9 @@ void main() async {
   // Add your lava link nodes. Empty constructor assumes default settings to lavalink.
   await cluster.addNode(NodeOptions());
 
-  await for (final msg in client.onMessageReceived) {
+  await for (final msg in client.eventsWs.onMessageReceived) {
     if(msg.message.content == "!join") {
-      final channel = await client.fetchChannel<VoiceGuildChannel>(channelId);
+      final channel = await client.fetchChannel<IVoiceGuildChannel>(channelId);
 
       // Create lava link node for guild
       cluster.getOrCreatePlayerNode(guildId);
