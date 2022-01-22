@@ -3,7 +3,7 @@ import 'package:nyxx_lavalink/src/node/node.dart';
 
 abstract class IBaseEvent {
   /// A reference to the current client
-  INyxx get client;
+  INyxxRest get client;
 
   /// A reference to the node this event belongs to
   INode get node;
@@ -13,7 +13,7 @@ abstract class IBaseEvent {
 class BaseEvent implements IBaseEvent {
   /// A reference to the current client
   @override
-  final INyxx client;
+  final INyxxRest client;
 
   /// A reference to the node this event belongs to
   @override

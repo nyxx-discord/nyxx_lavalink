@@ -20,7 +20,7 @@ class PlayerUpdateEvent extends BaseEvent implements IPlayerUpdateEvent {
   @override
   late final Snowflake guildId;
 
-  PlayerUpdateEvent(INyxx client, INode node, Map<String, dynamic> json) : super(client, node) {
+  PlayerUpdateEvent(INyxxRest client, INode node, Map<String, dynamic> json) : super(client, node) {
     guildId = Snowflake(json["guildId"]);
     state = PlayerUpdateStateEvent(json["state"]["time"] as int, json["state"]["position"] as int?);
   }

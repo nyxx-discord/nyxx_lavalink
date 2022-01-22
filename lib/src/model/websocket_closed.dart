@@ -35,7 +35,7 @@ class WebSocketClosedEvent extends BaseEvent implements IWebSocketClosedEvent {
   @override
   late final bool byRemote;
 
-  WebSocketClosedEvent(INyxx client, INode node, Map<String, dynamic> json) : super(client, node) {
+  WebSocketClosedEvent(INyxxRest client, INode node, Map<String, dynamic> json) : super(client, node) {
     guildId = Snowflake(json["guildId"]);
     code = json["code"] as int;
     reason = json["reason"] as String;

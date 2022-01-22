@@ -28,7 +28,7 @@ class TrackStuckEvent extends BaseEvent implements ITrackStuckEvent {
   @override
   late final Snowflake guildId;
 
-  TrackStuckEvent(INyxx client, INode node, Map<String, dynamic> json) : super(client, node) {
+  TrackStuckEvent(INyxxRest client, INode node, Map<String, dynamic> json) : super(client, node) {
     track = json["track"] as String;
     thresholdMs = json["thresholdMs"] as int;
     guildId = Snowflake(json["guildId"] as String);
