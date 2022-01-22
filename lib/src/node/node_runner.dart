@@ -49,7 +49,7 @@ Future<void> handleNode(SendPort clusterPort) async {
     final address = node.ssl ? "wss://${node.host}:${node.port}" : "ws://${node.host}:${node.port}";
     var actualAttempt = 1;
 
-    while (actualAttempt < node.maxConnectAttempts) {
+    while (actualAttempt <= node.maxConnectAttempts) {
       try {
         clusterPort.send({
           "cmd": "LOG",
