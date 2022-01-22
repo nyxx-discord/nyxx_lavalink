@@ -49,7 +49,7 @@ class StatsEvent extends BaseEvent implements IStatsEvent {
   @override
   late final int uptime;
 
-  StatsEvent(INyxxRest client, INode node, Map<String, dynamic> json) : super(client, node) {
+  StatsEvent(INyxx client, INode node, Map<String, dynamic> json) : super(client, node) {
     playingPlayers = json["playingPlayers"] as int;
     players = json["players"] as int;
     uptime = json["uptime"] as int;

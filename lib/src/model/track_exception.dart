@@ -28,7 +28,7 @@ class TrackExceptionEvent extends BaseEvent implements ITrackExceptionEvent {
   @override
   late final Snowflake guildId;
 
-  TrackExceptionEvent(INyxxRest client, INode node, Map<String, dynamic> json) : super(client, node) {
+  TrackExceptionEvent(INyxx client, INode node, Map<String, dynamic> json) : super(client, node) {
     track = json["track"] as String;
     exception = LavalinkException(json);
     guildId = Snowflake(json["guildId"]);

@@ -28,7 +28,7 @@ class TrackStartEvent extends BaseEvent implements ITrackStartEvent {
   @override
   late final Snowflake guildId;
 
-  TrackStartEvent(INyxxRest client, INode node, Map<String, dynamic> json) : super(client, node) {
+  TrackStartEvent(INyxx client, INode node, Map<String, dynamic> json) : super(client, node) {
     startType = json["type"] as String;
     track = json["track"] as String;
     guildId = Snowflake(json["guildId"]);

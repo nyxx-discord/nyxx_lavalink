@@ -27,7 +27,7 @@ class TrackEndEvent extends BaseEvent implements ITrackEndEvent {
   @override
   late final Snowflake guildId;
 
-  TrackEndEvent(INyxxRest client, INode node, Map<String, dynamic> json) : super(client, node) {
+  TrackEndEvent(INyxx client, INode node, Map<String, dynamic> json) : super(client, node) {
     reason = json["reason"] as String;
     track = json["track"] as String;
     guildId = Snowflake(json["guildId"] as String);
