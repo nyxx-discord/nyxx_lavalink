@@ -23,7 +23,7 @@ abstract class ICluster {
   UnmodifiableMapView<int, INode> get connectedNodes;
 
   /// Returns a map with the nodes that are actually disconnected from lavalink
-  UnmodifiableMapView<int, Node> get disconnectedNodes;
+  UnmodifiableMapView<int, INode> get disconnectedNodes;
 
   /// Dispatcher of all lavalink events
   late final IEventDispatcher eventDispatcher;
@@ -71,7 +71,7 @@ class Cluster implements ICluster {
 
   /// Returns a map with the nodes that are actually disconnected from lavalink
   @override
-  UnmodifiableMapView<int, Node> get disconnectedNodes => UnmodifiableMapView(connectingNodes.cast<int, Node>());
+  UnmodifiableMapView<int, INode> get disconnectedNodes => UnmodifiableMapView(connectingNodes);
 
   /// A map to keep the assigned node id for each player
   final Map<Snowflake, int> nodeLocations = {};
