@@ -3,7 +3,6 @@ import 'dart:isolate';
 
 import 'package:logging/logging.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 import 'package:nyxx_lavalink/src/node/node.dart';
 import 'package:nyxx_lavalink/src/node/node_options.dart';
 import 'package:nyxx_lavalink/src/node/node_runner.dart';
@@ -12,7 +11,7 @@ import 'package:nyxx_lavalink/src/cluster_exception.dart';
 
 import 'event_dispatcher.dart';
 
-abstract class ICluster {
+abstract class ICluster implements Disposable {
   /// A reference to the client
   INyxx get client;
 
@@ -23,7 +22,7 @@ abstract class ICluster {
   UnmodifiableMapView<int, INode> get connectedNodes;
 
   /// Returns a map with the nodes that are actually disconnected from lavalink
-  UnmodifiableMapView<int, Node> get disconnectedNodes;
+  UnmodifiableMapView<int, INode> get disconnectedNodes;
 
   /// Dispatcher of all lavalink events
   late final IEventDispatcher eventDispatcher;
@@ -71,7 +70,7 @@ class Cluster implements ICluster {
 
   /// Returns a map with the nodes that are actually disconnected from lavalink
   @override
-  UnmodifiableMapView<int, Node> get disconnectedNodes => UnmodifiableMapView(connectingNodes.cast<int, Node>());
+  UnmodifiableMapView<int, INode> get disconnectedNodes => UnmodifiableMapView(connectingNodes);
 
   /// A map to keep the assigned node id for each player
   final Map<Snowflake, int> nodeLocations = {};
@@ -173,7 +172,7 @@ class Cluster implements ICluster {
           node.players.forEach((guildId, _) => nodeLocations.remove(guildId));
 
           // Also delete the players, so them can be created again on another node
-          node.players.clear();
+          node.clearPlayers();
 
           logger.info("[Node ${map["nodeId"]}] Disconnected from lavalink");
         }
@@ -290,5 +289,10 @@ class Cluster implements ICluster {
 
     _receiveStream = _receivePort.asBroadcastStream();
     _receiveStream.listen(_handleNodeMessage);
+  }
+
+  @override
+  Future<void> dispose() async {
+    await eventDispatcher.dispose();
   }
 }

@@ -31,6 +31,8 @@ class NodeOptions {
   /// Node id, you **must** not set this yourself
   late final int nodeId;
 
+  late final String clientName;
+
   /// Constructor to build a new node builder
   NodeOptions(
       {this.host = "localhost",
@@ -39,7 +41,8 @@ class NodeOptions {
       this.password = "youshallnotpass",
       this.shards = 1,
       this.maxConnectAttempts = 5,
-      this.delayBetweenReconnections = const Duration(seconds: 5)});
+      this.delayBetweenReconnections = const Duration(seconds: 5),
+      this.clientName = "nyxx_lavalink"});
 
   NodeOptions.fromJson(Map<String, dynamic> json) {
     host = json["host"] as String;
@@ -51,6 +54,7 @@ class NodeOptions {
     nodeId = json["nodeId"] as int;
     maxConnectAttempts = json["maxConnectAttempts"] as int;
     delayBetweenReconnections = Duration(milliseconds: json["delayBetweenReconnections"] as int);
+    clientName = json["clientName"] as String;
   }
 
   Map<String, dynamic> toJson() => {
@@ -62,6 +66,7 @@ class NodeOptions {
         "clientId": clientId.id,
         "nodeId": nodeId,
         "maxConnectAttempts": maxConnectAttempts,
-        "delayBetweenReconnections": delayBetweenReconnections.inMilliseconds
+        "delayBetweenReconnections": delayBetweenReconnections.inMilliseconds,
+        "clientName": clientName
       };
 }
