@@ -62,7 +62,7 @@ Future<void> handleNode(SendPort clusterPort) async {
           "Authorization": node.password,
           "Num-Shards": node.shards,
           "User-Id": node.clientId.id,
-          "Client-Name": node.clientName
+          "Client-Name": node.clientName,
         }).then((ws) {
           clusterPort.send({"cmd": "CONNECTED", "nodeId": node.nodeId});
 

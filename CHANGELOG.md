@@ -1,3 +1,7 @@
+## 3.0.1
+__23.1.2022__
+- Fixed a bug where the `Client-Name` header was not sent
+
 ## 3.0.0
 __19.12.2021__
 
