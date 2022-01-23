@@ -12,7 +12,7 @@ import 'package:nyxx_lavalink/src/cluster_exception.dart';
 
 import 'event_dispatcher.dart';
 
-abstract class ICluster {
+abstract class ICluster implements Disposable {
   /// A reference to the client
   INyxx get client;
 
@@ -290,5 +290,10 @@ class Cluster implements ICluster {
 
     _receiveStream = _receivePort.asBroadcastStream();
     _receiveStream.listen(_handleNodeMessage);
+  }
+
+  @override
+  Future<void> dispose() async {
+    await eventDispatcher.dispose();
   }
 }
