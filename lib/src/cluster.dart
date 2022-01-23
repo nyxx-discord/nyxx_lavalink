@@ -173,7 +173,7 @@ class Cluster implements ICluster {
           node.players.forEach((guildId, _) => nodeLocations.remove(guildId));
 
           // Also delete the players, so them can be created again on another node
-          node.players.clear();
+          node.clearPlayers();
 
           logger.info("[Node ${map["nodeId"]}] Disconnected from lavalink");
         }
