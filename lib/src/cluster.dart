@@ -3,7 +3,6 @@ import 'dart:isolate';
 
 import 'package:logging/logging.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 import 'package:nyxx_lavalink/src/node/node.dart';
 import 'package:nyxx_lavalink/src/node/node_options.dart';
 import 'package:nyxx_lavalink/src/node/node_runner.dart';
