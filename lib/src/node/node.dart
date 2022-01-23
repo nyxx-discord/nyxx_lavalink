@@ -50,6 +50,9 @@ abstract class INode {
   /// Resumes the track playback of a guild player
   void resume(Snowflake guildId);
 
+  /// Clears all the players this node handles
+  void clearPlayers();
+
   /// Searches a given query over the lavalink api and returns the results
   Future<ITracks> searchTracks(String query);
 
@@ -114,6 +117,12 @@ class Node implements INode {
     _httpUri = options.ssl ? "https://${options.host}:${options.port}" : "http://${options.host}:${options.port}";
 
     _defaultHeaders = {"Authorization": options.password, "Num-Shards": options.shards.toString(), "User-Id": options.clientId.toString()};
+  }
+
+  /// Clears all the players this node handles
+  @override
+  void clearPlayers() {
+    _players.clear();
   }
 
   void sendPayload(String op, Snowflake guildId, [Map<String, dynamic>? data]) async {

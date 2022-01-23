@@ -49,7 +49,7 @@ Future<void> handleNode(SendPort clusterPort) async {
     final address = node.ssl ? "wss://${node.host}:${node.port}" : "ws://${node.host}:${node.port}";
     var actualAttempt = 1;
 
-    while (actualAttempt < node.maxConnectAttempts) {
+    while (actualAttempt <= node.maxConnectAttempts) {
       try {
         clusterPort.send({
           "cmd": "LOG",
@@ -58,7 +58,12 @@ Future<void> handleNode(SendPort clusterPort) async {
           "message": "[Node ${node.nodeId}] Trying to connect to lavalink ($actualAttempt/${node.maxConnectAttempts})"
         });
 
-        await WebSocket.connect(address, headers: {"Authorization": node.password, "Num-Shards": node.shards, "User-Id": node.clientId.id}).then((ws) {
+        await WebSocket.connect(address, headers: {
+          "Authorization": node.password,
+          "Num-Shards": node.shards,
+          "User-Id": node.clientId.id,
+          "Client-Name": node.clientName,
+        }).then((ws) {
           clusterPort.send({"cmd": "CONNECTED", "nodeId": node.nodeId});
 
           socket = ws;
