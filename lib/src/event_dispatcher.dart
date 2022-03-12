@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:nyxx/nyxx.dart';
+import 'package:nyxx_lavalink/src/model/track.dart';
 
 import 'cluster.dart';
 import 'model/stats.dart';
@@ -130,7 +131,15 @@ class EventDispatcher implements IEventDispatcher {
         break;
 
       case "playerUpdate":
-        onPlayerUpdateController.add(PlayerUpdateEvent(cluster.client, node, json["data"] as Map<String, dynamic>));
+        final update = PlayerUpdateEvent(cluster.client, node, json["data"] as Map<String, dynamic>);
+
+        if (update.state.position != null) {
+          final _node = node as Node;
+          (_node.players[update.guildId]?.nowPlaying?.track.info as TrackInfo)
+              .position = update.state.position!;
+        }
+
+        onPlayerUpdateController.add(update);
         break;
     }
   }
