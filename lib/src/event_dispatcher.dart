@@ -135,8 +135,8 @@ class EventDispatcher implements IEventDispatcher {
 
         if (update.state.position != null) {
           final _node = node as Node;
-          (_node.players[update.guildId]?.nowPlaying?.track.info as TrackInfo)
-              .position = update.state.position!;
+          // Update the position of the currently playing track of the corresponding player.
+          (_node.players[update.guildId]?.nowPlaying?.track.info as TrackInfo).position = update.state.position!;
         }
 
         onPlayerUpdateController.add(update);
