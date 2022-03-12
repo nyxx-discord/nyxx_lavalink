@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_lavalink/src/model/track.dart';
-
 import 'cluster.dart';
+
 import 'model/stats.dart';
+import 'model/track.dart';
 import 'model/track_end.dart';
 import 'model/track_start.dart';
 import 'model/track_stuck.dart';
