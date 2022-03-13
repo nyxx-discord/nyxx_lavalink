@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:nyxx/nyxx.dart';
-
 import 'cluster.dart';
+
 import 'model/stats.dart';
+import 'model/track.dart';
 import 'model/track_end.dart';
 import 'model/track_start.dart';
 import 'model/track_stuck.dart';
@@ -130,7 +131,15 @@ class EventDispatcher implements IEventDispatcher {
         break;
 
       case "playerUpdate":
-        onPlayerUpdateController.add(PlayerUpdateEvent(cluster.client, node, json["data"] as Map<String, dynamic>));
+        final update = PlayerUpdateEvent(cluster.client, node, json["data"] as Map<String, dynamic>);
+
+        if (update.state.position != null) {
+          final _node = node as Node;
+          // Update the position of the currently playing track of the corresponding player.
+          (_node.players[update.guildId]?.nowPlaying?.track.info as TrackInfo?)?.position = update.state.position!;
+        }
+
+        onPlayerUpdateController.add(update);
         break;
     }
   }

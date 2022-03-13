@@ -125,7 +125,7 @@ class TrackInfo implements ITrackInfo {
 
   /// Position returned by lavalink
   @override
-  late final int position;
+  late int position;
 
   /// The title of the track
   @override
