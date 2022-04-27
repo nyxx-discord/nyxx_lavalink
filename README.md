@@ -83,7 +83,7 @@ The dartdocs page will always have the documentation for the latest release.
 
 ## Contributing to Nyxx
 
-Read [contributing document](https://github.com/l7ssha/nyxx_lavalink/blob/development/CONTRIBUTING.md)
+Read [contributing document](https://github.com/nyxx-discord/nyxx_lavalink/blob/dev/CONTRIBUTING.md)
 
 ## Credits
 
