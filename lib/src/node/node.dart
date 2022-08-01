@@ -277,7 +277,7 @@ class Node implements INode {
       throw HttpException(response.statusCode);
     }
 
-    return Tracks(jsonDecode(response.body) as Map<String, dynamic>);
+    return Tracks(jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
   }
 
   /// Searches a provided query on selected platform (YouTube by default),
