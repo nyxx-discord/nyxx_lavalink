@@ -1,4 +1,8 @@
 ## 3.0.1
+__18.8.2022__
+- Bump the nyxx version to `4.0.0`
+
+## 3.0.1
 __23.1.2022__
 - Fixed a bug where the `Client-Name` header was not sent
 
