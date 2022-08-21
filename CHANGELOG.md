@@ -1,6 +1,7 @@
 ## 3.1.0
 __21.8.2022__
-- Bump the nyxx version to `4.0.0`
+- feature: bump the nyxx version to `4.0.0` (#12)
+- feature: Decode bodyBytes by utf8 (#10)
 
 ## 3.0.1
 __23.1.2022__
