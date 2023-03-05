@@ -1,3 +1,8 @@
+## 3.2.0
+__05.02_2023
+
+- Update to nyx 5.0.0
+
 ## 3.1.0
 __21.8.2022__
 - feature: bump the nyxx version to `4.0.0` (#12)
