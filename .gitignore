@@ -8,7 +8,6 @@ docs/
 .project
 .pub
 **/build
-**/packages
 *.dart.js
 *.part.js
 *.js.deps
