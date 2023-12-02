@@ -13,9 +13,15 @@ import 'package:lavalink/src/messages/player_update.dart';
 import 'package:lavalink/src/messages/ready.dart';
 import 'package:lavalink/src/messages/stats.dart';
 
+/// A websocket connection to a Lavalink server.
+///
+/// Provides a stream interface that exposes messages sent by the server and errors encountered by
+/// the connection.
 class LavalinkConnection extends Stream<LavalinkMessage> {
+  /// The client this connection is for.
   final LavalinkClient client;
 
+  /// The ID of the current session this connection is using.
   // Only safe to read after the first ready event, but instances of this class are not returned
   // from LavalinkConnection.connect until that happens.
   String get sessionId => _sessionId!;
@@ -28,9 +34,10 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
   bool _closing = false;
 
   LavalinkConnection._({required this.client}) {
-    run();
+    _run();
   }
 
+  /// Create a new connection to a Lavalink server and wait for it to be ready.
   static Future<LavalinkConnection> connect(LavalinkClient client) async {
     final connection = LavalinkConnection._(client: client);
     await connection._readyCompleter.future;
@@ -52,7 +59,7 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
     );
   }
 
-  Future<void> run() async {
+  Future<void> _run() async {
     while (!_closing) {
       try {
         _webSocket = await WebSocket.connect(
@@ -103,9 +110,11 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
         _messagesController.addError(error, stack);
       }
     }
+
     await _messagesController.close();
   }
 
+  /// Close this connection and all associated resources.
   Future<void> close() async {
     _closing = true;
     await _webSocket?.close(1000);
