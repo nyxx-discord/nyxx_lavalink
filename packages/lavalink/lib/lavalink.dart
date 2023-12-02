@@ -1,3 +1,6 @@
+/// A wrapper for the Lavalink API.
+library;
+
 export 'src/errors.dart';
 export 'src/connection.dart';
 export 'src/client.dart';
