@@ -9,7 +9,7 @@ part 'websocket_closed.g.dart';
 class WebSocketClosedEvent extends LavalinkEvent {
   final int code;
   final String reason;
-  final bool wasByRemote;
+  final bool? wasByRemote;
 
   WebSocketClosedEvent({
     required super.client,
