@@ -125,7 +125,7 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
       return;
     }
 
-    final player = await lavalinkClient!.updatePlayer(
+    await lavalinkClient!.updatePlayer(
       guildId.toString(),
       voice: lavalink.VoiceState(
         endpoint: voiceServer.endpoint!,
@@ -137,7 +137,8 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
     plugin._playerConnectedController.add(LavalinkPlayer(
       client: client,
       lavalinkClient: lavalinkClient!,
-      player: player,
+      plugin: plugin,
+      guildId: guildId,
     ));
   }
 
