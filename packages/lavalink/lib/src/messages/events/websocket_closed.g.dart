@@ -15,5 +15,5 @@ WebSocketClosedEvent _$WebSocketClosedEventFromJson(
       guildId: json['guildId'] as String,
       code: json['code'] as int,
       reason: json['reason'] as String,
-      wasByRemote: json['wasByRemote'] as bool,
+      wasByRemote: json['wasByRemote'] as bool?,
     );
