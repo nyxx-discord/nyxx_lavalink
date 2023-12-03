@@ -54,7 +54,7 @@ class LavalinkPlayer {
   Future<void> disconnect() async {
     await lavalinkClient.deletePlayer(guildId.toString());
     client.gateway.updateVoiceState(
-      Snowflake.parse(guildId),
+      guildId,
       GatewayVoiceStateBuilder(
         channelId: null,
         isMuted: false,
