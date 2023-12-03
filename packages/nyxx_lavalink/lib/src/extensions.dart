@@ -45,6 +45,6 @@ extension LavalinkVoiceChannel on VoiceChannel {
       ),
     );
 
-    return plugin.onPlayerConnected.firstWhere((player) => player.guildId == guildId.toString());
+    return await plugin.onPlayerConnected.firstWhere((player) => player.guildId == guildId);
   }
 }
