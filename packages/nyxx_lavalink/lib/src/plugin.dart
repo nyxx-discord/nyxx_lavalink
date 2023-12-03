@@ -79,6 +79,8 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
     });
 
     client.onVoiceStateUpdate.listen((event) async {
+      if (event.state.userId != client.user.id) return;
+
       final guildId = event.state.guildId;
       if (guildId == null) return;
 
