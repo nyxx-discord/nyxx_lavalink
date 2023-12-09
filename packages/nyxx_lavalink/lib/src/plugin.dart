@@ -87,6 +87,22 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
   @override
   NyxxPluginState<NyxxGateway, LavalinkPlugin> createState() => _LavalinkPluginState(this);
 
+  /// Connect to a voice channel using Lavalink.
+  ///
+  /// The returned [LavalinkPlayer] can be used to control the player in the channel.
+  Future<LavalinkPlayer> connect(NyxxGateway client, Snowflake channelId, Snowflake guildId) async {
+    client.gateway.updateVoiceState(
+      guildId,
+      GatewayVoiceStateBuilder(
+        channelId: channelId,
+        isMuted: false,
+        isDeafened: false,
+      ),
+    );
+
+    return await onPlayerConnected.firstWhere((player) => player.guildId == guildId);
+  }
+
   Future<T> _withClient<T>(Future<T> Function(HttpLavalinkClient client) f) async {
     if (_customClient case final customClient?) {
       return f(customClient);
