@@ -17,6 +17,5 @@ class PlayerUpdateMessage extends LavalinkMessage {
     required this.state,
   });
 
-  factory PlayerUpdateMessage.fromJson(Map<String, Object?> json) =>
-      _$PlayerUpdateMessageFromJson(json);
+  factory PlayerUpdateMessage.fromJson(Map<String, Object?> json) => _$PlayerUpdateMessageFromJson(json);
 }

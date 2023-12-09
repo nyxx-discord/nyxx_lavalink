@@ -6,9 +6,7 @@ part of 'websocket_closed.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-WebSocketClosedEvent _$WebSocketClosedEventFromJson(
-        Map<String, dynamic> json) =>
-    WebSocketClosedEvent(
+WebSocketClosedEvent _$WebSocketClosedEventFromJson(Map<String, dynamic> json) => WebSocketClosedEvent(
       client: identity(json['client'] as LavalinkClient),
       opType: json['op'] as String,
       type: json['type'] as String,

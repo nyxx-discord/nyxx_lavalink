@@ -57,14 +57,11 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
     }
   }
 
-  Future<LoadResult> loadTrack(String identifier) =>
-      _withClient((client) => client.loadTrack(identifier));
+  Future<LoadResult> loadTrack(String identifier) => _withClient((client) => client.loadTrack(identifier));
 
-  Future<Track> decodeTrack(String encodedTrack) =>
-      _withClient((client) => client.decodeTrack(encodedTrack));
+  Future<Track> decodeTrack(String encodedTrack) => _withClient((client) => client.decodeTrack(encodedTrack));
 
-  Future<List<Track>> decodeTracks(List<String> encodedTracks) =>
-      _withClient((client) => client.decodeTracks(encodedTracks));
+  Future<List<Track>> decodeTracks(List<String> encodedTracks) => _withClient((client) => client.decodeTracks(encodedTracks));
 
   Future<LavalinkInfo> getInfo() => _withClient((client) => client.getInfo());
 

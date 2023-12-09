@@ -36,38 +36,32 @@ class LavalinkPlayer {
 
   Stream<TrackEndEvent> get onTrackEnd => _onTrackEndController.stream;
   late final StreamForwarder<TrackEndEvent> _onTrackEndController = StreamForwarder(
-    plugin.onTrackEnd
-        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+    plugin.onTrackEnd.where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
   );
 
   Stream<TrackExceptionEvent> get onTrackException => _onTrackExceptionController.stream;
   late final StreamForwarder<TrackExceptionEvent> _onTrackExceptionController = StreamForwarder(
-    plugin.onTrackException
-        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+    plugin.onTrackException.where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
   );
 
   Stream<TrackStartEvent> get onTrackStart => _onTrackStartController.stream;
   late final StreamForwarder<TrackStartEvent> _onTrackStartController = StreamForwarder(
-    plugin.onTrackStart
-        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+    plugin.onTrackStart.where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
   );
 
   Stream<TrackStuckEvent> get onTrackStuck => _onTrackStuckController.stream;
   late final StreamForwarder<TrackStuckEvent> _onTrackStuckController = StreamForwarder(
-    plugin.onTrackStuck
-        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+    plugin.onTrackStuck.where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
   );
 
   Stream<WebSocketClosedEvent> get onWebsocketClosed => _onWebsocketClosedController.stream;
   late final StreamForwarder<WebSocketClosedEvent> _onWebsocketClosedController = StreamForwarder(
-    plugin.onWebsocketClosed
-        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+    plugin.onWebsocketClosed.where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
   );
 
   Stream<PlayerUpdateMessage> get onUpdate => _onUpdateController.stream;
   late final StreamForwarder<PlayerUpdateMessage> _onUpdateController = StreamForwarder(
-    plugin.onPlayerUpdate
-        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+    plugin.onPlayerUpdate.where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
   );
 
   Track? get currentTrack => _currentTrack;
@@ -115,27 +109,21 @@ class LavalinkPlayer {
     ]);
   }
 
-  Future<void> play(Track track) =>
-      lavalinkClient.updatePlayer(guildId.toString(), encodedTrack: track.encoded);
+  Future<void> play(Track track) => lavalinkClient.updatePlayer(guildId.toString(), encodedTrack: track.encoded);
 
-  Future<void> playEncoded(String encodedTrack) =>
-      lavalinkClient.updatePlayer(guildId.toString(), encodedTrack: encodedTrack);
+  Future<void> playEncoded(String encodedTrack) => lavalinkClient.updatePlayer(guildId.toString(), encodedTrack: encodedTrack);
 
-  Future<void> playIdentifier(String identifier) =>
-      lavalinkClient.updatePlayer(guildId.toString(), identifier: identifier);
+  Future<void> playIdentifier(String identifier) => lavalinkClient.updatePlayer(guildId.toString(), identifier: identifier);
 
   Future<void> stopPlaying() => lavalinkClient.updatePlayer(guildId.toString(), encodedTrack: null);
 
-  Future<void> seekTo(Duration position) =>
-      lavalinkClient.updatePlayer(guildId.toString(), position: position);
+  Future<void> seekTo(Duration position) => lavalinkClient.updatePlayer(guildId.toString(), position: position);
 
   Future<void> pause() => lavalinkClient.updatePlayer(guildId.toString(), isPaused: true);
 
   Future<void> resume() => lavalinkClient.updatePlayer(guildId.toString(), isPaused: false);
 
-  Future<void> setVolume(int volume) =>
-      lavalinkClient.updatePlayer(guildId.toString(), volume: volume);
+  Future<void> setVolume(int volume) => lavalinkClient.updatePlayer(guildId.toString(), volume: volume);
 
-  Future<void> setFilters(Filters filters) =>
-      lavalinkClient.updatePlayer(guildId.toString(), filters: filters);
+  Future<void> setFilters(Filters filters) => lavalinkClient.updatePlayer(guildId.toString(), filters: filters);
 }
