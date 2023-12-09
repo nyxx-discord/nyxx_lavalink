@@ -11,23 +11,14 @@ import 'package:lavalink/src/models/route_planner.dart';
 import 'package:lavalink/src/models/stats.dart';
 import 'package:lavalink/src/models/track.dart';
 
-/// A client that connects to a Lavalink server, providing methods to control the server and
-/// exposing events received from the server.
-class LavalinkClient {
-  /// The current version of `package:lavalink`.
-  static const version = '1.0.0';
-
-  /// The default client name used by this package.
-  static const defaultClientName = 'Dart-Lavalink/$version';
-
+/// A Lavalink client that does not create a session on the server and can only make certain HTTP
+/// requests.
+class HttpLavalinkClient {
   /// The URI relative to which API routes will be resolved.
   final Uri base;
 
   /// The password to use for authentication.
   final String password;
-
-  /// The user ID of this client.
-  final String userId;
 
   /// The name of this client.
   final String clientName;
@@ -35,38 +26,11 @@ class LavalinkClient {
   /// The HTTP client used by this client.
   final http.Client httpClient = http.Client();
 
-  /// The websocket connection to the lavalink server, over which events are received.
-  LavalinkConnection get connection => _connection;
-  late final LavalinkConnection _connection;
-
-  LavalinkClient._({
+  HttpLavalinkClient({
     required this.base,
     required this.password,
-    required this.userId,
-    required this.clientName,
+    this.clientName = LavalinkClient.defaultClientName,
   });
-
-  /// Create a new client connected to a Lavalink server.
-  static Future<LavalinkClient> connect(
-    Uri base, {
-    required String password,
-    required String userId,
-    String clientName = defaultClientName,
-  }) async {
-    // Ensure the path will be used as a directory in resolve()
-    if (!base.path.endsWith('/')) base = base.replace(path: '${base.path}/');
-
-    final client = LavalinkClient._(
-      base: base,
-      password: password,
-      userId: userId,
-      clientName: clientName,
-    );
-
-    client._connection = await LavalinkConnection.connect(client);
-
-    return client;
-  }
 
   Future<String> _executeSafe(
     String method,
@@ -108,6 +72,118 @@ class LavalinkClient {
     }
 
     return bodyText;
+  }
+
+  /// Load one or more tracks from an identifier.
+  Future<LoadResult> loadTrack(String identifier) async {
+    final response = jsonDecode(await _executeSafe(
+      'GET',
+      '/v4/loadtracks',
+      queryParameters: {'identifier': identifier},
+    ));
+    return LoadResult.fromJson(response as Map<String, Object?>);
+  }
+
+  /// Decode a track from its encoded form.
+  Future<Track> decodeTrack(String encodedTrack) async {
+    final response = jsonDecode(await _executeSafe(
+      'GET',
+      '/v4/decodetrack',
+      queryParameters: {'encodedTrack': encodedTrack},
+    ));
+    return Track.fromJson(response as Map<String, Object?>);
+  }
+
+  /// Decode multiple tracks from their encoded form.
+  Future<List<Track>> decodeTracks(List<String> encodedTracks) async {
+    final response =
+        jsonDecode(await _executeSafe('POST', '/v4/decodetracks', body: encodedTracks));
+    return (response as List).cast<Map<String, Object?>>().map(Track.fromJson).toList();
+  }
+
+  /// Get information about the server.
+  Future<LavalinkInfo> getInfo() async {
+    final response = jsonDecode(await _executeSafe('GET', '/v4/info'));
+    return LavalinkInfo.fromJson(response as Map<String, Object?>);
+  }
+
+  /// Get statistics from the server.
+  Future<LavalinkStats> getStats() async {
+    final response = jsonDecode(await _executeSafe('GET', '/v4/stats'));
+    return LavalinkStats.fromJson(response as Map<String, Object?>);
+  }
+
+  /// Get the current version of the server.
+  Future<String> getVersion() async => await _executeSafe('GET', '/version');
+
+  /// Get the current status of the RoutePlanner extension.
+  Future<RoutePlannerStatus> getRoutePlannerStatus() async {
+    final response = jsonDecode(await _executeSafe('GET', '/v4/routeplanner/status'));
+    return RoutePlannerStatus.fromJson(response as Map<String, Object?>);
+  }
+
+  /// Unmark a failed address in the RoutePlanner extension.
+  Future<void> unmarkFailedAddress(String address) async {
+    jsonDecode(await _executeSafe(
+      'POST',
+      '/v4/routeplanner/free/address',
+      body: {'address': address},
+    ));
+  }
+
+  /// Unmark all failed addresses in the RoutePlanner extension.
+  Future<void> unmarkAllFailedAddresses() async =>
+      await _executeSafe('POST', '/v4/routeplanner/free/all');
+
+  /// Close this client and all associated resources.
+  Future<void> close() async {
+    httpClient.close();
+  }
+}
+
+/// A client that connects to a Lavalink server, providing methods to control the server and
+/// exposing events received from the server.
+class LavalinkClient extends HttpLavalinkClient {
+  /// The current version of `package:lavalink`.
+  static const version = '1.0.0';
+
+  /// The default client name used by this package.
+  static const defaultClientName = 'Dart-Lavalink/$version';
+
+  /// The user ID of this client.
+  final String userId;
+
+  /// The websocket connection to the lavalink server, over which events are received.
+  LavalinkConnection get connection => _connection;
+  late final LavalinkConnection _connection;
+
+  LavalinkClient._({
+    required super.base,
+    required super.password,
+    required this.userId,
+    required super.clientName,
+  });
+
+  /// Create a new client connected to a Lavalink server.
+  static Future<LavalinkClient> connect(
+    Uri base, {
+    required String password,
+    required String userId,
+    String clientName = defaultClientName,
+  }) async {
+    // Ensure the path will be used as a directory in resolve()
+    if (!base.path.endsWith('/')) base = base.replace(path: '${base.path}/');
+
+    final client = LavalinkClient._(
+      base: base,
+      password: password,
+      userId: userId,
+      clientName: clientName,
+    );
+
+    client._connection = await LavalinkConnection.connect(client);
+
+    return client;
   }
 
   /// List all players in the current session.
@@ -181,70 +257,9 @@ class LavalinkClient {
     );
   }
 
-  /// Load one or more tracks from an identifier.
-  Future<LoadResult> loadTrack(String identifier) async {
-    final response = jsonDecode(await _executeSafe(
-      'GET',
-      '/v4/loadtracks',
-      queryParameters: {'identifier': identifier},
-    ));
-    return LoadResult.fromJson(response as Map<String, Object?>);
-  }
-
-  /// Decode a track from its encoded form.
-  Future<Track> decodeTrack(String encodedTrack) async {
-    final response = jsonDecode(await _executeSafe(
-      'GET',
-      '/v4/decodetrack',
-      queryParameters: {'encodedTrack': encodedTrack},
-    ));
-    return Track.fromJson(response as Map<String, Object?>);
-  }
-
-  /// Decode multiple tracks from their encoded form.
-  Future<List<Track>> decodeTracks(List<String> encodedTracks) async {
-    final response =
-        jsonDecode(await _executeSafe('POST', '/v4/decodetracks', body: encodedTracks));
-    return (response as List).cast<Map<String, Object?>>().map(Track.fromJson).toList();
-  }
-
-  /// Get information about the server.
-  Future<LavalinkInfo> getInfo() async {
-    final response = jsonDecode(await _executeSafe('GET', '/v4/info'));
-    return LavalinkInfo.fromJson(response as Map<String, Object?>);
-  }
-
-  /// Get statistics from the server.
-  Future<LavalinkStats> getStats() async {
-    final response = jsonDecode(await _executeSafe('GET', '/v4/stats'));
-    return LavalinkStats.fromJson(response as Map<String, Object?>);
-  }
-
-  /// Get the current version of the server.
-  Future<String> getVersion() async => await _executeSafe('GET', '/version');
-
-  /// Get the current status of the RoutePlanner extension.
-  Future<RoutePlannerStatus> getRoutePlannerStatus() async {
-    final response = jsonDecode(await _executeSafe('GET', '/v4/routeplanner/status'));
-    return RoutePlannerStatus.fromJson(response as Map<String, Object?>);
-  }
-
-  /// Unmark a failed address in the RoutePlanner extension.
-  Future<void> unmarkFailedAddress(String address) async {
-    jsonDecode(await _executeSafe(
-      'POST',
-      '/v4/routeplanner/free/address',
-      body: {'address': address},
-    ));
-  }
-
-  /// Unmark all failed addresses in the RoutePlanner extension.
-  Future<void> unmarkAllFailedAddresses() async =>
-      await _executeSafe('POST', '/v4/routeplanner/free/all');
-
-  /// Close this client and all associated resources.
+  @override
   Future<void> close() async {
-    httpClient.close();
+    await super.close();
     await connection.close();
   }
 }
