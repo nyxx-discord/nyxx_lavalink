@@ -6,11 +6,16 @@ import 'package:lavalink/src/models/track.dart';
 
 part 'track_end.g.dart';
 
+/// An event sent when the end of a [Track] is reached.
 @JsonSerializable()
 class TrackEndEvent extends LavalinkEvent {
+  /// The track that ended.
   final Track track;
+
+  /// The reason why the track ended.
   final String reason;
 
+  /// Create a new [TrackEndEvent].
   TrackEndEvent({
     required super.client,
     required super.opType,

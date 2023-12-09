@@ -7,11 +7,14 @@ part 'stats.g.dart';
 
 dynamic _readFromSelf(Map<dynamic, dynamic> json, String key) => json;
 
+/// A message containing statistics about the server.
 @JsonSerializable()
 class StatsMessage extends LavalinkMessage {
+  /// The statistics.
   @JsonKey(readValue: _readFromSelf)
   final LavalinkStats stats;
 
+  /// Create a new [StatsMessage].
   StatsMessage({
     required super.client,
     required super.opType,

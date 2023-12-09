@@ -5,12 +5,19 @@ import 'package:lavalink/src/messages/message.dart';
 
 part 'websocket_closed.g.dart';
 
+/// An event sent when the websocket connection to Discord's voice servers is lost.
 @JsonSerializable()
 class WebSocketClosedEvent extends LavalinkEvent {
+  /// The close code of the websocket connection.
   final int code;
+
+  /// The reason the connection was closed.
   final String reason;
+
+  /// Whether the connection was closed by the remote server (Discord).
   final bool? wasByRemote;
 
+  /// Create a new [WebSocketClosedEvent].
   WebSocketClosedEvent({
     required super.client,
     required super.opType,
