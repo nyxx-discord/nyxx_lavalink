@@ -124,11 +124,11 @@ class HttpLavalinkClient {
 
   /// Unmark a failed address in the RoutePlanner extension.
   Future<void> unmarkFailedAddress(String address) async {
-    jsonDecode(await _executeSafe(
+    await _executeSafe(
       'POST',
       '/v4/routeplanner/free/address',
       body: {'address': address},
-    ));
+    );
   }
 
   /// Unmark all failed addresses in the RoutePlanner extension.
