@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+    strategy:
+      matrix:
+        package: [lavalink, nyxx_lavalink]
+  
     steps:
       - name: Setup Dart Action
         uses: dart-lang/setup-dart@v1
@@ -27,9 +31,11 @@ jobs:
             ${{ runner.os }}-pubspec-
 
       - name: Install dependencies
+        working-directory: packages/${{ matrix.package }}
         run: dart pub get
 
       - name: Analyze project source
+        working-directory: packages/${{ matrix.package }}
         run: dart analyze
 
   format:
@@ -37,6 +43,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+    strategy:
+      matrix:
+        package: [lavalink, nyxx_lavalink]
+
     steps:
       - name: Setup Dart Action
         uses: dart-lang/setup-dart@v1
@@ -53,9 +63,11 @@ jobs:
             ${{ runner.os }}-pubspec-
 
       - name: Install dependencies
+        working-directory: packages/${{ matrix.package }}
         run: dart pub get
 
       - name: Format
+        working-directory: packages/${{ matrix.package }}
         run: dart format --set-exit-if-changed -l 160 ./lib
 
   tests:
@@ -64,6 +76,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+    strategy:
+      matrix:
+        package: [lavalink, nyxx_lavalink]
+  
     steps:
       - name: Setup Dart Action
         uses: dart-lang/setup-dart@v1
@@ -80,7 +96,9 @@ jobs:
             ${{ runner.os }}-pubspec-
 
       - name: Install dependencies
+        working-directory: packages/${{ matrix.package }}
         run: dart pub get
 
       - name: Unit tests
+        working-directory: packages/${{ matrix.package }}
         run: dart run test test/unit/**
