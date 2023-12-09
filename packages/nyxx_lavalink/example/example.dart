@@ -26,10 +26,14 @@ void main() async {
 
     final player = await voiceChannel.connectLavalink();
 
-    await player.playEncoded(
-      // Crab Rave!!!!
-      'QAAAzAMAK05vaXNlc3Rvcm0gLSBDcmFiIFJhdmUgW01vbnN0ZXJjYXQgUmVsZWFzZV0AE01vbnN0ZXJjYXQgSW5zdGluY3QAAAAAAALx6AALTERVX1R4azA2dE0AAQAraHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1MRFVfVHhrMDZ0TQEAMGh0dHBzOi8vaS55dGltZy5jb20vdmkvTERVX1R4azA2dE0vbXFkZWZhdWx0LmpwZwAAB3lvdXR1YmUAAAAAAAAAAA==',
-    );
+    final searchResult = await lavalink.loadTrack('ytsearch:Crab Rave');
+
+    if (searchResult is! SearchLoadResult) throw Exception('Expected search load result');
+    if (searchResult.data.isEmpty) throw Exception('No tracks found');
+
+    final track = searchResult.data.first;
+
+    await player.play(track);
 
     await lavalink.onTrackEnd.firstWhere((e) => e.guildId == event.guild!.id.toString());
 
