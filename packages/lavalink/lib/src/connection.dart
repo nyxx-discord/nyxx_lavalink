@@ -63,10 +63,7 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
     while (!_closing) {
       try {
         _webSocket = await WebSocket.connect(
-          client.base
-              .resolve('v4/websocket')
-              .replace(scheme: client.base.isScheme('https') ? 'wss' : 'ws')
-              .toString(),
+          client.base.resolve('v4/websocket').replace(scheme: client.base.isScheme('https') ? 'wss' : 'ws').toString(),
           headers: {
             'Authorization': client.password,
             'User-Id': client.userId,

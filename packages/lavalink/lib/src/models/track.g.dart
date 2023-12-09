@@ -21,9 +21,7 @@ TrackInfo _$TrackInfoFromJson(Map<String, dynamic> json) => TrackInfo(
       position: _durationFromMilliseconds(json['position'] as int),
       title: json['title'] as String,
       uri: json['uri'] == null ? null : Uri.parse(json['uri'] as String),
-      artworkUrl: json['artworkUrl'] == null
-          ? null
-          : Uri.parse(json['artworkUrl'] as String),
+      artworkUrl: json['artworkUrl'] == null ? null : Uri.parse(json['artworkUrl'] as String),
       isrc: json['isrc'] as String?,
       sourceName: json['sourceName'] as String,
     );

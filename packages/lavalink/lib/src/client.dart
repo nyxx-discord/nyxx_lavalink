@@ -96,8 +96,7 @@ class HttpLavalinkClient {
 
   /// Decode multiple tracks from their encoded form.
   Future<List<Track>> decodeTracks(List<String> encodedTracks) async {
-    final response =
-        jsonDecode(await _executeSafe('POST', '/v4/decodetracks', body: encodedTracks));
+    final response = jsonDecode(await _executeSafe('POST', '/v4/decodetracks', body: encodedTracks));
     return (response as List).cast<Map<String, Object?>>().map(Track.fromJson).toList();
   }
 
@@ -132,8 +131,7 @@ class HttpLavalinkClient {
   }
 
   /// Unmark all failed addresses in the RoutePlanner extension.
-  Future<void> unmarkAllFailedAddresses() async =>
-      await _executeSafe('POST', '/v4/routeplanner/free/all');
+  Future<void> unmarkAllFailedAddresses() async => await _executeSafe('POST', '/v4/routeplanner/free/all');
 
   /// Close this client and all associated resources.
   Future<void> close() async {
@@ -188,8 +186,7 @@ class LavalinkClient extends HttpLavalinkClient {
 
   /// List all players in the current session.
   Future<List<Player>> listPlayers() async {
-    final response =
-        jsonDecode(await _executeSafe('GET', '/v4/sessions/${connection.sessionId}/players'));
+    final response = jsonDecode(await _executeSafe('GET', '/v4/sessions/${connection.sessionId}/players'));
     return (response as List).cast<Map<String, Object?>>().map(Player.fromJson).toList();
   }
 

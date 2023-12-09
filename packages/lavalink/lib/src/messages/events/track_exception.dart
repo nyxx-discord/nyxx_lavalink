@@ -20,8 +20,7 @@ class TrackExceptionEvent extends LavalinkEvent {
     required this.exception,
   });
 
-  factory TrackExceptionEvent.fromJson(Map<String, Object?> json) =>
-      _$TrackExceptionEventFromJson(json);
+  factory TrackExceptionEvent.fromJson(Map<String, Object?> json) => _$TrackExceptionEventFromJson(json);
 }
 
 @JsonSerializable()

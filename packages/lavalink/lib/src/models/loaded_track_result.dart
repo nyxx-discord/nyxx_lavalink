@@ -48,8 +48,7 @@ class PlaylistLoadResult extends LoadResult {
   /// Create a new [PlaylistLoadResult].
   PlaylistLoadResult({required super.loadType, required this.data});
 
-  factory PlaylistLoadResult.fromJson(Map<String, Object?> json) =>
-      _$PlaylistLoadResultFromJson(json);
+  factory PlaylistLoadResult.fromJson(Map<String, Object?> json) => _$PlaylistLoadResultFromJson(json);
 }
 
 /// A playlist of tracks.

@@ -6,8 +6,7 @@ part of 'track_start.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TrackStartEvent _$TrackStartEventFromJson(Map<String, dynamic> json) =>
-    TrackStartEvent(
+TrackStartEvent _$TrackStartEventFromJson(Map<String, dynamic> json) => TrackStartEvent(
       client: identity(json['client'] as LavalinkClient),
       opType: json['op'] as String,
       type: json['type'] as String,

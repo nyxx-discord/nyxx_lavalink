@@ -6,8 +6,7 @@ part of 'track_stuck.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TrackStuckEvent _$TrackStuckEventFromJson(Map<String, dynamic> json) =>
-    TrackStuckEvent(
+TrackStuckEvent _$TrackStuckEventFromJson(Map<String, dynamic> json) => TrackStuckEvent(
       client: identity(json['client'] as LavalinkClient),
       opType: json['op'] as String,
       type: json['type'] as String,

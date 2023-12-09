@@ -12,14 +12,9 @@ LavalinkInfo _$LavalinkInfoFromJson(Map<String, dynamic> json) => LavalinkInfo(
       git: Git.fromJson(json['git'] as Map<String, dynamic>),
       jvm: json['jvm'] as String,
       lavaplayer: json['lavaplayer'] as String,
-      sourceManagers: (json['sourceManagers'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      filters:
-          (json['filters'] as List<dynamic>).map((e) => e as String).toList(),
-      plugins: (json['plugins'] as List<dynamic>)
-          .map((e) => Plugin.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      sourceManagers: (json['sourceManagers'] as List<dynamic>).map((e) => e as String).toList(),
+      filters: (json['filters'] as List<dynamic>).map((e) => e as String).toList(),
+      plugins: (json['plugins'] as List<dynamic>).map((e) => Plugin.fromJson(e as Map<String, dynamic>)).toList(),
     );
 
 Version _$VersionFromJson(Map<String, dynamic> json) => Version(
