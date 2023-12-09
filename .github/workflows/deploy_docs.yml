@@ -26,17 +26,21 @@ jobs:
             ${{ runner.os }}-pubspec-
 
       - name: Install dependencies
+        working-directory: packages/nyxx_lavalink
         run: dart pub get
 
       - name: Generate docs
+        working-directory: packages/nyxx_lavalink
         run: dart doc
 
       - name: Extract branch name
+        working-directory: packages/nyxx_lavalink
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
       - name: Deploy nyxx dev docs
+        working-directory: packages/nyxx_lavalink
         uses: easingthemes/ssh-deploy@v2.1.5
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_SERVER_KEY }}
