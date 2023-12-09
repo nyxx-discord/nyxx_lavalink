@@ -101,4 +101,4 @@ jobs:
 
       - name: Unit tests
         working-directory: packages/${{ matrix.package }}
-        run: dart test test/unit/**
+        run: dart run test test/unit/**
