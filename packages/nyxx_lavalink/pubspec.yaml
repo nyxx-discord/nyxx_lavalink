@@ -1,6 +1,6 @@
 name: nyxx_lavalink
 description: Support for playing audio in Discord voice channels using nyxx, powered by Lavalink.
-version: 4.0.0
+version: 4.0.0-dev.1
 
 repository: https://github.com/nyxx-discord/nyxx_lavalink
 issue_tracker: https://github.com/nyxx-discord/nyxx_lavalink/issues
