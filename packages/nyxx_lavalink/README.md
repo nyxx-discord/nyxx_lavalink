@@ -8,6 +8,8 @@ A simple to use wrapper around the [Lavalink](https://lavalink.dev/) API for Dis
 
 This package does not contain a Lavalink server. Follow the instructions [here](https://lavalink.dev/configuration/binary.html) (or [here](https://lavalink.dev/configuration/docker.html), if you're using Docker) to run a server, then provide the server address when creating your `LavalinkPlugin` instance.
 
+nyxx_lavalink uses Lavalink version 4. If you get errors, ensure your Lavalink server is running version 4 or above.
+
 ## Other nyxx packages
 
 - [nyxx_commands](https://pub.dev/packages/nyxx_commands): A command framework for handling both simple & complex commands.
