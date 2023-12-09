@@ -1,6 +1,31 @@
+import 'dart:async';
+
 import 'package:lavalink/lavalink.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_lavalink/src/plugin.dart';
+
+/// An internal helper that forwards events from one stream to another, but can be closed.
+class StreamForwarder<T> {
+  final Stream<T> sourceStream;
+
+  late final StreamSubscription<T> subscription;
+  final StreamController<T> controller = StreamController.broadcast();
+
+  Stream<T> get stream => controller.stream;
+
+  StreamForwarder(this.sourceStream) {
+    subscription = sourceStream.listen(
+      controller.add,
+      onError: controller.addError,
+      onDone: controller.close,
+    );
+  }
+
+  Future<void> close() async {
+    await subscription.cancel();
+    await controller.close();
+  }
+}
 
 class LavalinkPlayer {
   final NyxxGateway client;
@@ -9,23 +34,41 @@ class LavalinkPlayer {
 
   final Snowflake guildId;
 
-  Stream<TrackEndEvent> get onTrackEnd => plugin.onTrackEnd
-      .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient);
+  Stream<TrackEndEvent> get onTrackEnd => _onTrackEndController.stream;
+  late final StreamForwarder<TrackEndEvent> _onTrackEndController = StreamForwarder(
+    plugin.onTrackEnd
+        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+  );
 
-  Stream<TrackExceptionEvent> get onTrackException => plugin.onTrackException
-      .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient);
+  Stream<TrackExceptionEvent> get onTrackException => _onTrackExceptionController.stream;
+  late final StreamForwarder<TrackExceptionEvent> _onTrackExceptionController = StreamForwarder(
+    plugin.onTrackException
+        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+  );
 
-  Stream<TrackStartEvent> get onTrackStart => plugin.onTrackStart
-      .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient);
+  Stream<TrackStartEvent> get onTrackStart => _onTrackStartController.stream;
+  late final StreamForwarder<TrackStartEvent> _onTrackStartController = StreamForwarder(
+    plugin.onTrackStart
+        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+  );
 
-  Stream<TrackStuckEvent> get onTrackStuck => plugin.onTrackStuck
-      .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient);
+  Stream<TrackStuckEvent> get onTrackStuck => _onTrackStuckController.stream;
+  late final StreamForwarder<TrackStuckEvent> _onTrackStuckController = StreamForwarder(
+    plugin.onTrackStuck
+        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+  );
 
-  Stream<WebSocketClosedEvent> get onWebsocketClosed => plugin.onWebsocketClosed
-      .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient);
+  Stream<WebSocketClosedEvent> get onWebsocketClosed => _onWebsocketClosedController.stream;
+  late final StreamForwarder<WebSocketClosedEvent> _onWebsocketClosedController = StreamForwarder(
+    plugin.onWebsocketClosed
+        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+  );
 
-  Stream<PlayerUpdateMessage> get onUpdate => plugin.onPlayerUpdate
-      .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient);
+  Stream<PlayerUpdateMessage> get onUpdate => _onUpdateController.stream;
+  late final StreamForwarder<PlayerUpdateMessage> _onUpdateController = StreamForwarder(
+    plugin.onPlayerUpdate
+        .where((event) => event.guildId == guildId.toString() && event.client == lavalinkClient),
+  );
 
   Track? get currentTrack => _currentTrack;
   Track? _currentTrack;
@@ -61,6 +104,15 @@ class LavalinkPlayer {
         isDeafened: false,
       ),
     );
+
+    await Future.wait([
+      _onTrackEndController.close(),
+      _onTrackExceptionController.close(),
+      _onTrackStartController.close(),
+      _onTrackStuckController.close(),
+      _onWebsocketClosedController.close(),
+      _onUpdateController.close(),
+    ]);
   }
 
   Future<void> play(Track track) =>
