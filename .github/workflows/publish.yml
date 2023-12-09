@@ -6,8 +6,12 @@ on:
       - main
 
 jobs:
-  nyxx_publish:
+  publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [lavalink, nyxx_lavalink]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -20,9 +24,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pubspec-
 
-      - name: 'publish nyxx package to pub.dev'
+      - name: 'publish ${{ matrix.package }} package to pub.dev'
         id: publish
         uses: k-paxian/dart-package-publisher@master
+        working-directory: packages/${{ matrix.package }}
         with:
           skipTests: true
           force: true

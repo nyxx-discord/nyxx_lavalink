@@ -8,7 +8,6 @@ docs/
 .project
 .pub
 **/build
-**/packages
 *.dart.js
 *.part.js
 *.js.deps
@@ -37,3 +36,4 @@ test-*.dart
 coverage.json
 lcov.info
 pubspec.lock
+application.yml.example
