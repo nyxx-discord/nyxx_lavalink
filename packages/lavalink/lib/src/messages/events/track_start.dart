@@ -6,10 +6,13 @@ import 'package:lavalink/src/models/track.dart';
 
 part 'track_start.g.dart';
 
+/// An event sent when a track starts playing.
 @JsonSerializable()
 class TrackStartEvent extends LavalinkEvent {
+  /// The track that started playing.
   final Track track;
 
+  /// Create a new [TrackStartEvent].
   TrackStartEvent({
     required super.client,
     required super.opType,
