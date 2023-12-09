@@ -6,16 +6,13 @@ part of 'stats.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LavalinkStats _$LavalinkStatsFromJson(Map<String, dynamic> json) =>
-    LavalinkStats(
+LavalinkStats _$LavalinkStatsFromJson(Map<String, dynamic> json) => LavalinkStats(
       players: json['players'] as int,
       playingPlayers: json['playingPlayers'] as int,
       uptime: Duration(microseconds: json['uptime'] as int),
       memory: MemoryStats.fromJson(json['memory'] as Map<String, dynamic>),
       cpu: CpuStats.fromJson(json['cpu'] as Map<String, dynamic>),
-      frames: json['frames'] == null
-          ? null
-          : FrameStats.fromJson(json['frames'] as Map<String, dynamic>),
+      frames: json['frames'] == null ? null : FrameStats.fromJson(json['frames'] as Map<String, dynamic>),
     );
 
 MemoryStats _$MemoryStatsFromJson(Map<String, dynamic> json) => MemoryStats(

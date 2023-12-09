@@ -16,8 +16,7 @@ class RoutePlannerStatus {
   /// Create a new [RoutePlannerStatus].
   RoutePlannerStatus({required this.type, required this.details});
 
-  factory RoutePlannerStatus.fromJson(Map<String, Object?> json) =>
-      _$RoutePlannerStatusFromJson(json);
+  factory RoutePlannerStatus.fromJson(Map<String, Object?> json) => _$RoutePlannerStatusFromJson(json);
 }
 
 /// Information about the configuration of the RoutePlanner extension on a Lavalink server.
@@ -57,8 +56,7 @@ class RoutePlannerDetails {
     required this.blockIndex,
   });
 
-  factory RoutePlannerDetails.fromJson(Map<String, Object?> json) =>
-      _$RoutePlannerDetailsFromJson(json);
+  factory RoutePlannerDetails.fromJson(Map<String, Object?> json) => _$RoutePlannerDetailsFromJson(json);
 }
 
 /// A block of IP addresses.

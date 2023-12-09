@@ -6,9 +6,7 @@ part of 'ready.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LavalinkReadyMessage _$LavalinkReadyMessageFromJson(
-        Map<String, dynamic> json) =>
-    LavalinkReadyMessage(
+LavalinkReadyMessage _$LavalinkReadyMessageFromJson(Map<String, dynamic> json) => LavalinkReadyMessage(
       client: identity(json['client'] as LavalinkClient),
       opType: json['op'] as String,
       wasResumed: json['resumed'] as bool,

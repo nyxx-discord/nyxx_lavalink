@@ -21,6 +21,5 @@ class WebSocketClosedEvent extends LavalinkEvent {
     required this.wasByRemote,
   });
 
-  factory WebSocketClosedEvent.fromJson(Map<String, Object?> json) =>
-      _$WebSocketClosedEventFromJson(json);
+  factory WebSocketClosedEvent.fromJson(Map<String, Object?> json) => _$WebSocketClosedEventFromJson(json);
 }
