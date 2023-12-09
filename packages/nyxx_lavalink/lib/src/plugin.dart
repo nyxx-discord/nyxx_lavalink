@@ -18,7 +18,7 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
 
   final Uri base;
   final String password;
-  final LavalinkClient? innerClient;
+  final LavalinkClient? _innerClient;
 
   final StreamController<LavalinkMessage> _messagesController = StreamController.broadcast();
   Stream<LavalinkMessage> get onMessage => _messagesController.stream;
@@ -40,11 +40,37 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
   LavalinkPlugin({
     required this.base,
     required this.password,
-    this.innerClient,
-  });
+    LavalinkClient? innerClient,
+  }) : _innerClient = innerClient;
 
   @override
   NyxxPluginState<NyxxGateway, LavalinkPlugin> createState() => _LavalinkPluginState(this);
+
+  Future<T> _withClient<T>(Future<T> Function(HttpLavalinkClient client) f) async {
+    if (_innerClient case final innerClient?) {
+      return f(innerClient);
+    } else {
+      final client = HttpLavalinkClient(base: base, password: password);
+      final result = await f(client);
+      await client.close();
+      return result;
+    }
+  }
+
+  Future<LoadResult> loadTrack(String identifier) =>
+      _withClient((client) => client.loadTrack(identifier));
+
+  Future<Track> decodeTrack(String encodedTrack) =>
+      _withClient((client) => client.decodeTrack(encodedTrack));
+
+  Future<List<Track>> decodeTracks(List<String> encodedTracks) =>
+      _withClient((client) => client.decodeTracks(encodedTracks));
+
+  Future<LavalinkInfo> getInfo() => _withClient((client) => client.getInfo());
+
+  Future<LavalinkStats> getStats() => _withClient((client) => client.getStats());
+
+  Future<String> getVersion() => _withClient((client) => client.getVersion());
 }
 
 class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> {
@@ -59,7 +85,7 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
   Future<void> afterConnect(NyxxGateway client) async {
     await super.afterConnect(client);
 
-    lavalinkClient = plugin.innerClient ??
+    lavalinkClient = plugin._innerClient ??
         await LavalinkClient.connect(
           plugin.base,
           password: plugin.password,
