@@ -40,15 +40,6 @@ extension LavalinkVoiceChannel on VoiceChannel {
       _ => throw UnsupportedError('Cannot connect to Lavalink outside of a guild'),
     };
 
-    client.gateway.updateVoiceState(
-      guildId,
-      GatewayVoiceStateBuilder(
-        channelId: id,
-        isMuted: false,
-        isDeafened: false,
-      ),
-    );
-
-    return await plugin.onPlayerConnected.firstWhere((player) => player.guildId == guildId);
+    return await plugin.connect(client, id, guildId);
   }
 }
