@@ -6,11 +6,16 @@ import 'package:lavalink/src/models/track.dart';
 
 part 'track_stuck.g.dart';
 
+/// An event sent when a [Track] gets stuck while playing.
 @JsonSerializable()
 class TrackStuckEvent extends LavalinkEvent {
+  /// The track that got stuck.
   final Track track;
+
+  /// The threshold that was exceeded.
   final Duration threshold;
 
+  /// Create a new [TrackStuckEvent].
   TrackStuckEvent({
     required super.client,
     required super.opType,
