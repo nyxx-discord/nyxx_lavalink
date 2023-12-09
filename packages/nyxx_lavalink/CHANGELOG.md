@@ -1,3 +1,9 @@
+## 4.0.0
+__09.12.2023__
+
+- Update to nyxx 6.0.0
+- Update to Lavalink v4
+
 ## 3.2.0
 __05.02_2023
 

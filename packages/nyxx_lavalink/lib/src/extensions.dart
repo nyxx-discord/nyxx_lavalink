@@ -26,14 +26,18 @@ NyxxGateway _ensureGateway(Nyxx client) {
   throw StateError('Lavalink was used on ${client.runtimeType} (only NyxxGateway is supported)');
 }
 
+/// Utilities for connecting to a voice channel using Lavalink.
 extension LavalinkVoiceChannel on VoiceChannel {
+  /// Connect to this voice channel using Lavalink.
+  ///
+  /// The returned [LavalinkPlayer] can be used to control the player in the channel.
   Future<LavalinkPlayer> connectLavalink() async {
     final client = _ensureGateway(manager.client);
     final plugin = _pluginFromClient(client);
 
     final guildId = switch (this) {
       GuildChannel(:final guildId) => guildId,
-      _ => throw 'nope', // TODO: Handle properly
+      _ => throw UnsupportedError('Cannot connect to Lavalink outside of a guild'),
     };
 
     client.gateway.updateVoiceState(

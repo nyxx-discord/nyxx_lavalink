@@ -12,43 +12,84 @@ extension StreamExtension<T> on Stream<T> {
   Stream<U> whereType<U>() => where((event) => event is U).cast<U>();
 }
 
+/// A plugin that adds Lavalink support to [NyxxGateway] clients.
 class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
-  static const version = '0.0.0';
+  /// The current version of `nyxx_lavalink`.
+  static const version = '4.0.0';
+
+  /// The default client name used when connecting to lavalink.
   static const clientName = 'nyxx_lavalink/$version';
 
+  /// The URI relative to which the Lavalink API is accessed.
+  ///
+  /// This URI must include the port on which the server is running. It must not include the `/v4` version suffix.
+  ///
+  /// Examples:
+  /// - If you are running Lavalink on your local machine: `Uri.http('localhost:2333')` (assuming the default port 2333 is used).
+  /// - If you are running Lavalink using docker and docker-compose: `Uri.http('lavalink:2333')` (assuming the Lavalink server is running in the service named
+  ///   `lavalink`, that the default port 2333 is used and exposed, and that the `lavalink` service is linked to the current service).
   final Uri base;
+
+  /// The password to use when authenticating with the Lavalink server.
   final String password;
-  final LavalinkClient? _innerClient;
 
-  final StreamController<LavalinkMessage> _messagesController = StreamController.broadcast();
+  /// A stream of messages received by Lavalink clients created by this plugin.
   Stream<LavalinkMessage> get onMessage => _messagesController.stream;
+  final StreamController<LavalinkMessage> _messagesController = StreamController.broadcast();
 
+  /// A stream of [StatsMessage]s received by Lavalink clients created by this plugin.
   Stream<StatsMessage> get onStats => onMessage.whereType<StatsMessage>();
+
+  /// A stream of [LavalinkReadyMessage]s received by Lavalink clients created by this plugin.
   Stream<LavalinkReadyMessage> get onReady => onMessage.whereType<LavalinkReadyMessage>();
+
+  /// A stream of [PlayerUpdateMessage]s received by Lavalink clients created by this plugin.
   Stream<PlayerUpdateMessage> get onPlayerUpdate => onMessage.whereType<PlayerUpdateMessage>();
+
+  /// A stream of [LavalinkEvent]s received by Lavalink clients created by this plugin.
   Stream<LavalinkEvent> get onEvent => onMessage.whereType<LavalinkEvent>();
 
+  /// A stream of [TrackEndEvent]s received by Lavalink clients created by this plugin.
   Stream<TrackEndEvent> get onTrackEnd => onEvent.whereType<TrackEndEvent>();
+
+  /// A stream of [TrackExceptionEvent]s received by Lavalink clients created by this plugin.
   Stream<TrackExceptionEvent> get onTrackException => onEvent.whereType<TrackExceptionEvent>();
+
+  /// A stream of [TrackStartEvent]s received by Lavalink clients created by this plugin.
   Stream<TrackStartEvent> get onTrackStart => onEvent.whereType<TrackStartEvent>();
+
+  /// A stream of [TrackStuckEvent]s received by Lavalink clients created by this plugin.
   Stream<TrackStuckEvent> get onTrackStuck => onEvent.whereType<TrackStuckEvent>();
+
+  /// A stream of [WebSocketClosedEvent]s received by Lavalink clients created by this plugin.
   Stream<WebSocketClosedEvent> get onWebsocketClosed => onEvent.whereType<WebSocketClosedEvent>();
 
-  final StreamController<LavalinkPlayer> _playerConnectedController = StreamController.broadcast();
+  /// A stream of [LavalinkPlayer]s emitted when a Lavalink player connects to a voice channel.
   Stream<LavalinkPlayer> get onPlayerConnected => _playerConnectedController.stream;
+  final StreamController<LavalinkPlayer> _playerConnectedController = StreamController.broadcast();
 
+  final LavalinkClient? _customClient;
+
+  /// Create a new [LavalinkPlugin].
   LavalinkPlugin({
     required this.base,
     required this.password,
-    LavalinkClient? innerClient,
-  }) : _innerClient = innerClient;
+  }) : _customClient = null;
+
+  /// Create a new [LavalinkPlugin] that uses a custom [LavalinkClient].
+  ///
+  /// Using this constructor means every nyxx client attached to this plugin will use the provided Lavalink client. The Lavalink client will not be closed when
+  /// nyxx clients are closed.
+  LavalinkPlugin.usingClient(LavalinkClient this._customClient)
+      : base = _customClient.base,
+        password = _customClient.password;
 
   @override
   NyxxPluginState<NyxxGateway, LavalinkPlugin> createState() => _LavalinkPluginState(this);
 
   Future<T> _withClient<T>(Future<T> Function(HttpLavalinkClient client) f) async {
-    if (_innerClient case final innerClient?) {
-      return f(innerClient);
+    if (_customClient case final customClient?) {
+      return f(customClient);
     } else {
       final client = HttpLavalinkClient(base: base, password: password);
       final result = await f(client);
@@ -57,17 +98,23 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
     }
   }
 
+  /// Load information about the track or tracks identified by [identifier].
   Future<LoadResult> loadTrack(String identifier) => _withClient((client) => client.loadTrack(identifier));
 
+  /// Decode a base64-encoded [Track].
   Future<Track> decodeTrack(String encodedTrack) => _withClient((client) => client.decodeTrack(encodedTrack));
 
+  /// Decode multiple base64-encoded [Track]s.
   Future<List<Track>> decodeTracks(List<String> encodedTracks) => _withClient((client) => client.decodeTracks(encodedTracks));
 
-  Future<LavalinkInfo> getInfo() => _withClient((client) => client.getInfo());
+  /// Fetch information about the Lavalink server.
+  Future<LavalinkInfo> fetchInfo() => _withClient((client) => client.getInfo());
 
-  Future<LavalinkStats> getStats() => _withClient((client) => client.getStats());
+  /// Fetch statistics about the Lavalink server.
+  Future<LavalinkStats> fetchStats() => _withClient((client) => client.getStats());
 
-  Future<String> getVersion() => _withClient((client) => client.getVersion());
+  /// Fetch the current version of the Lavalink server.
+  Future<String> fetchVersion() => _withClient((client) => client.getVersion());
 }
 
 class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> {
@@ -82,7 +129,7 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
   Future<void> afterConnect(NyxxGateway client) async {
     await super.afterConnect(client);
 
-    lavalinkClient = plugin._innerClient ??
+    lavalinkClient = plugin._customClient ??
         await LavalinkClient.connect(
           plugin.base,
           password: plugin.password,
@@ -168,6 +215,9 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
   @override
   Future<void> beforeClose(NyxxGateway client) async {
     await super.beforeClose(client);
-    await lavalinkClient!.close();
+    if (plugin._customClient == null) {
+      // We are using our own client.
+      await lavalinkClient!.close();
+    }
   }
 }
