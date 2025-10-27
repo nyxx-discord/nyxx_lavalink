@@ -90,6 +90,21 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
                 'TrackExceptionEvent' => TrackExceptionEvent.fromJson(json),
                 'TrackStuckEvent' => TrackStuckEvent.fromJson(json),
                 'WebSocketClosedEvent' => WebSocketClosedEvent.fromJson(json),
+                final String type => (() {
+                    if (!client.plugins.any(
+                      (plugin) => plugin.handledEvents.keys.contains(type),
+                    )) {
+                      throw FormatException('Unknown event type: $type');
+                    }
+
+                    final plugins = client.plugins.where((plugin) => plugin.handledEvents.keys.contains(type));
+
+                    for (final plugin in plugins) {
+                      return plugin.handledEvents[type]?.call(json) ?? (throw StateError('Failed to get the handler of $type'));
+                    }
+
+                    throw 'noop';
+                  })(),
                 final unknownEvent => throw FormatException('Unknown event type: $unknownEvent'),
               },
             final unknownMessage => throw FormatException('Unknown message type: $unknownMessage')

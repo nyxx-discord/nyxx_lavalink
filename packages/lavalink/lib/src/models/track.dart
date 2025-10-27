@@ -1,8 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:lavalink/src/utils/deserializing_utils.dart';
 
 part 'track.g.dart';
-
-Duration _durationFromMilliseconds(int ms) => Duration(milliseconds: ms);
 
 /// An audio track.
 @JsonSerializable()
@@ -35,14 +34,14 @@ class TrackInfo {
   final String author;
 
   /// The length of the track.
-  @JsonKey(fromJson: _durationFromMilliseconds)
+  @JsonKey(fromJson: durationFromMilliseconds)
   final Duration length;
 
   /// Whether the track is a stream.
   final bool isStream;
 
   /// The track's current playback position.
-  @JsonKey(fromJson: _durationFromMilliseconds)
+  @JsonKey(fromJson: durationFromMilliseconds)
   final Duration position;
 
   /// The track's title.

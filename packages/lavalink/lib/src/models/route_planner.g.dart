@@ -28,6 +28,6 @@ IpBlock _$IpBlockFromJson(Map<String, dynamic> json) => IpBlock(
 
 FailingAddress _$FailingAddressFromJson(Map<String, dynamic> json) => FailingAddress(
       failingAddress: json['failingAddress'] as String,
-      failingTimestamp: _dateTimeFromMilliseconds(json['failingTimestamp'] as int),
+      failingTimestamp: _dateTimeFromMilliseconds((json['failingTimestamp'] as num).toInt()),
       failingTime: json['failingTime'] as String,
     );

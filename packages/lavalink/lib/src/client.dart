@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:lavalink/src/plugin.dart';
+import 'package:meta/meta.dart';
 import 'package:lavalink/src/connection.dart';
 import 'package:lavalink/src/errors.dart';
 import 'package:lavalink/src/models/filters.dart';
@@ -32,7 +34,10 @@ class HttpLavalinkClient {
     this.clientName = LavalinkClient.defaultClientName,
   });
 
-  Future<String> _executeSafe(
+  /// An internaal method to make requests.
+  /// This shouldn't be used by consumers but only in [LavalinkExternalPlugin].
+  @experimental
+  Future<String> executeSafe(
     String method,
     String endpoint, {
     bool trace = false,
@@ -76,7 +81,7 @@ class HttpLavalinkClient {
 
   /// Load one or more tracks from an identifier.
   Future<LoadResult> loadTrack(String identifier) async {
-    final response = jsonDecode(await _executeSafe(
+    final response = jsonDecode(await executeSafe(
       'GET',
       '/v4/loadtracks',
       queryParameters: {'identifier': identifier},
@@ -86,7 +91,7 @@ class HttpLavalinkClient {
 
   /// Decode a track from its encoded form.
   Future<Track> decodeTrack(String encodedTrack) async {
-    final response = jsonDecode(await _executeSafe(
+    final response = jsonDecode(await executeSafe(
       'GET',
       '/v4/decodetrack',
       queryParameters: {'encodedTrack': encodedTrack},
@@ -96,34 +101,34 @@ class HttpLavalinkClient {
 
   /// Decode multiple tracks from their encoded form.
   Future<List<Track>> decodeTracks(List<String> encodedTracks) async {
-    final response = jsonDecode(await _executeSafe('POST', '/v4/decodetracks', body: encodedTracks));
+    final response = jsonDecode(await executeSafe('POST', '/v4/decodetracks', body: encodedTracks));
     return (response as List).cast<Map<String, Object?>>().map(Track.fromJson).toList();
   }
 
   /// Get information about the server.
   Future<LavalinkInfo> getInfo() async {
-    final response = jsonDecode(await _executeSafe('GET', '/v4/info'));
+    final response = jsonDecode(await executeSafe('GET', '/v4/info'));
     return LavalinkInfo.fromJson(response as Map<String, Object?>);
   }
 
   /// Get statistics from the server.
   Future<LavalinkStats> getStats() async {
-    final response = jsonDecode(await _executeSafe('GET', '/v4/stats'));
+    final response = jsonDecode(await executeSafe('GET', '/v4/stats'));
     return LavalinkStats.fromJson(response as Map<String, Object?>);
   }
 
   /// Get the current version of the server.
-  Future<String> getVersion() async => await _executeSafe('GET', '/version');
+  Future<String> getVersion() async => await executeSafe('GET', '/version');
 
   /// Get the current status of the RoutePlanner extension.
   Future<RoutePlannerStatus> getRoutePlannerStatus() async {
-    final response = jsonDecode(await _executeSafe('GET', '/v4/routeplanner/status'));
+    final response = jsonDecode(await executeSafe('GET', '/v4/routeplanner/status'));
     return RoutePlannerStatus.fromJson(response as Map<String, Object?>);
   }
 
   /// Unmark a failed address in the RoutePlanner extension.
   Future<void> unmarkFailedAddress(String address) async {
-    await _executeSafe(
+    await executeSafe(
       'POST',
       '/v4/routeplanner/free/address',
       body: {'address': address},
@@ -131,7 +136,7 @@ class HttpLavalinkClient {
   }
 
   /// Unmark all failed addresses in the RoutePlanner extension.
-  Future<void> unmarkAllFailedAddresses() async => await _executeSafe('POST', '/v4/routeplanner/free/all');
+  Future<void> unmarkAllFailedAddresses() async => await executeSafe('POST', '/v4/routeplanner/free/all');
 
   /// Close this client and all associated resources.
   Future<void> close() async {
@@ -155,12 +160,18 @@ class LavalinkClient extends HttpLavalinkClient {
   LavalinkConnection get connection => _connection;
   late final LavalinkConnection _connection;
 
+  /// A list of plugins used by this client.
+  List<LavalinkExternalPlugin> get plugins => List.unmodifiable(_plugins);
+
+  final List<LavalinkExternalPlugin> _plugins;
+
   LavalinkClient._({
     required super.base,
     required super.password,
     required this.userId,
     required super.clientName,
-  });
+    required List<LavalinkExternalPlugin> plugins,
+  }) : _plugins = plugins;
 
   /// Create a new client connected to a Lavalink server.
   static Future<LavalinkClient> connect(
@@ -168,6 +179,7 @@ class LavalinkClient extends HttpLavalinkClient {
     required String password,
     required String userId,
     String clientName = defaultClientName,
+    List<LavalinkExternalPlugin> Function(LavalinkClient)? plugins,
   }) async {
     // Ensure the path will be used as a directory in resolve()
     if (!base.path.endsWith('/')) base = base.replace(path: '${base.path}/');
@@ -177,7 +189,10 @@ class LavalinkClient extends HttpLavalinkClient {
       password: password,
       userId: userId,
       clientName: clientName,
+      plugins: [],
     );
+
+    client._plugins.addAll(plugins?.call(client) ?? []);
 
     client._connection = await LavalinkConnection.connect(client);
 
@@ -186,13 +201,13 @@ class LavalinkClient extends HttpLavalinkClient {
 
   /// List all players in the current session.
   Future<List<Player>> listPlayers() async {
-    final response = jsonDecode(await _executeSafe('GET', '/v4/sessions/${connection.sessionId}/players'));
+    final response = jsonDecode(await executeSafe('GET', '/v4/sessions/${connection.sessionId}/players'));
     return (response as List).cast<Map<String, Object?>>().map(Player.fromJson).toList();
   }
 
   /// Get the player for a given guild.
   Future<Player> getPlayer(String guildId) async {
-    final response = jsonDecode(await _executeSafe(
+    final response = jsonDecode(await executeSafe(
       'GET',
       '/v4/sessions/${connection.sessionId}/players/$guildId',
     ));
@@ -212,7 +227,7 @@ class LavalinkClient extends HttpLavalinkClient {
     Filters? filters,
     VoiceState? voice,
   }) async {
-    final response = jsonDecode(await _executeSafe(
+    final response = jsonDecode(await executeSafe(
       'PATCH',
       '/v4/sessions/${connection.sessionId}/players/$guildId',
       body: {
@@ -231,7 +246,7 @@ class LavalinkClient extends HttpLavalinkClient {
 
   /// Delete the player for a guild.
   Future<void> deletePlayer(String guildId) async {
-    await _executeSafe('DELETE', '/v4/sessions/${connection.sessionId}/players/$guildId');
+    await executeSafe('DELETE', '/v4/sessions/${connection.sessionId}/players/$guildId');
   }
 
   /// Update the current session's properties.
@@ -239,7 +254,7 @@ class LavalinkClient extends HttpLavalinkClient {
     bool? resuming,
     Duration? timeout,
   }) async {
-    final response = jsonDecode(await _executeSafe(
+    final response = jsonDecode(await executeSafe(
       'PATCH',
       '/v4/sessions/${connection.sessionId}',
       body: {

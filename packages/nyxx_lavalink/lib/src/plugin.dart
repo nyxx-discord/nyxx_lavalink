@@ -33,6 +33,9 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
   /// The password to use when authenticating with the Lavalink server.
   final String password;
 
+  /// The external plugins to use.
+  final List<LavalinkExternalPlugin> Function(LavalinkClient)? plugins;
+
   /// A stream of messages received by Lavalink clients created by this plugin.
   Stream<LavalinkMessage> get onMessage => _messagesController.stream;
   final StreamController<LavalinkMessage> _messagesController = StreamController.broadcast();
@@ -71,10 +74,7 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
   final LavalinkClient? _customClient;
 
   /// Create a new [LavalinkPlugin].
-  LavalinkPlugin({
-    required this.base,
-    required this.password,
-  }) : _customClient = null;
+  LavalinkPlugin({required this.base, required this.password, this.plugins}) : _customClient = null;
 
   /// Create a new [LavalinkPlugin] that uses a custom [LavalinkClient].
   ///
@@ -82,7 +82,8 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
   /// nyxx clients are closed.
   LavalinkPlugin.usingClient(LavalinkClient this._customClient)
       : base = _customClient.base,
-        password = _customClient.password;
+        password = _customClient.password,
+        plugins = null;
 
   @override
   NyxxPluginState<NyxxGateway, LavalinkPlugin> createState() => _LavalinkPluginState(this);
@@ -151,6 +152,7 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
           password: plugin.password,
           userId: client.user.id.toString(),
           clientName: LavalinkPlugin.clientName,
+          plugins: plugin.plugins,
         );
 
     lavalinkClient!.connection.listen(

@@ -8,7 +8,7 @@ part of 'info.dart';
 
 LavalinkInfo _$LavalinkInfoFromJson(Map<String, dynamic> json) => LavalinkInfo(
       version: Version.fromJson(json['version'] as Map<String, dynamic>),
-      buildTime: _dateTimeFromMilliseconds(json['buildTime'] as int),
+      buildTime: _dateTimeFromMilliseconds((json['buildTime'] as num).toInt()),
       git: Git.fromJson(json['git'] as Map<String, dynamic>),
       jvm: json['jvm'] as String,
       lavaplayer: json['lavaplayer'] as String,
@@ -19,9 +19,9 @@ LavalinkInfo _$LavalinkInfoFromJson(Map<String, dynamic> json) => LavalinkInfo(
 
 Version _$VersionFromJson(Map<String, dynamic> json) => Version(
       semver: json['semver'] as String,
-      major: json['major'] as int,
-      minor: json['minor'] as int,
-      patch: json['patch'] as int,
+      major: (json['major'] as num).toInt(),
+      minor: (json['minor'] as num).toInt(),
+      patch: (json['patch'] as num).toInt(),
       preRelease: json['preRelease'] as String?,
       build: json['build'] as String?,
     );
@@ -29,7 +29,7 @@ Version _$VersionFromJson(Map<String, dynamic> json) => Version(
 Git _$GitFromJson(Map<String, dynamic> json) => Git(
       branch: json['branch'] as String,
       commit: json['commit'] as String,
-      commitTime: _dateTimeFromMilliseconds(json['commitTime'] as int),
+      commitTime: _dateTimeFromMilliseconds((json['commitTime'] as num).toInt()),
     );
 
 Plugin _$PluginFromJson(Map<String, dynamic> json) => Plugin(

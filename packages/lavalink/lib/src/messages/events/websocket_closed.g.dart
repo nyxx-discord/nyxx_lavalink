@@ -11,7 +11,7 @@ WebSocketClosedEvent _$WebSocketClosedEventFromJson(Map<String, dynamic> json) =
       opType: json['op'] as String,
       type: json['type'] as String,
       guildId: json['guildId'] as String,
-      code: json['code'] as int,
+      code: (json['code'] as num).toInt(),
       reason: json['reason'] as String,
       wasByRemote: json['wasByRemote'] as bool?,
     );
