@@ -1,7 +1,10 @@
 name: lavalink_plugins
 description: A package for lavalink that distribute bindings for some lavalin plugins
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/nyxx-discord/nyxx_lavalink
+
+# TODO remove the path dep and shit (cant use overrides for some reason)
+publish_to: none
 
 environment:
   sdk: ^3.0.0
