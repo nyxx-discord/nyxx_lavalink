@@ -5,6 +5,9 @@ version: 4.0.0
 repository: https://github.com/nyxx-discord/nyxx_lavalink
 issue_tracker: https://github.com/nyxx-discord/nyxx_lavalink/issues
 
+# TODO: also remvoe that
+publish_to: none
+
 environment:
   sdk: ^3.0.0
 
