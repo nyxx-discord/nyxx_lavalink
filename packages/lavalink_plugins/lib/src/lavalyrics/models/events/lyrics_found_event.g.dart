@@ -6,8 +6,7 @@ part of 'lyrics_found_event.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LyricsFoundEvent _$LyricsFoundEventFromJson(Map<String, dynamic> json) =>
-    LyricsFoundEvent(
+LyricsFoundEvent _$LyricsFoundEventFromJson(Map<String, dynamic> json) => LyricsFoundEvent(
       client: identity(json['client'] as LavalinkClient),
       opType: json['op'] as String,
       type: json['type'] as String,

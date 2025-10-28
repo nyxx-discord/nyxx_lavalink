@@ -6,8 +6,7 @@ part of 'segment_skipped.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SegmentSkipped _$SegmentSkippedFromJson(Map<String, dynamic> json) =>
-    SegmentSkipped(
+SegmentSkipped _$SegmentSkippedFromJson(Map<String, dynamic> json) => SegmentSkipped(
       client: identity(json['client'] as LavalinkClient),
       guildId: json['guildId'] as String,
       opType: json['op'] as String,

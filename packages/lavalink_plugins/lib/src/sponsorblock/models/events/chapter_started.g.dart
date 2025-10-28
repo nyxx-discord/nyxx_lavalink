@@ -6,8 +6,7 @@ part of 'chapter_started.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChapterStarted _$ChapterStartedFromJson(Map<String, dynamic> json) =>
-    ChapterStarted(
+ChapterStarted _$ChapterStartedFromJson(Map<String, dynamic> json) => ChapterStarted(
       client: identity(json['client'] as LavalinkClient),
       guildId: json['guildId'] as String,
       opType: json['op'] as String,

@@ -17,15 +17,14 @@ class LyricsLineEvent extends LavalinkEvent {
   @JsonKey(name: 'skipped')
   final bool hasBeenSkipped;
 
-  LyricsLineEvent({
-    required super.client,
-    required super.opType,
-    required super.type,
-    required super.guildId,
-    required this.hasBeenSkipped,
-    required this.line,
-    required this.lineIndex
-  });
+  LyricsLineEvent(
+      {required super.client,
+      required super.opType,
+      required super.type,
+      required super.guildId,
+      required this.hasBeenSkipped,
+      required this.line,
+      required this.lineIndex});
 
   factory LyricsLineEvent.fromJson(Map<String, Object?> json) => _$LyricsLineEventFromJson(json);
 }

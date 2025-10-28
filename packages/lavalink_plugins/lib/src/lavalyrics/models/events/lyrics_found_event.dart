@@ -10,13 +10,7 @@ class LyricsFoundEvent extends LavalinkEvent {
   /// The lyrics object containing the lyrics lines and metadata.
   final Lyrics lyrics;
 
-  LyricsFoundEvent({
-    required super.client,
-    required super.opType,
-    required super.type,
-    required super.guildId,
-    required this.lyrics
-  });
+  LyricsFoundEvent({required super.client, required super.opType, required super.type, required super.guildId, required this.lyrics});
 
   factory LyricsFoundEvent.fromJson(Map<String, Object?> json) => _$LyricsFoundEventFromJson(json);
 }

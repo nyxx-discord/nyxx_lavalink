@@ -2,4 +2,3 @@
 library;
 
 export 'src/sponsorblock.dart';
-
