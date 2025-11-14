@@ -36,7 +36,7 @@ class HttpLavalinkClient {
 
   /// An internal method to make requests.
   /// This shouldn't be used by consumers but only in [LavalinkExternalPlugin].
-  @experimental
+  @internal
   Future<String> executeSafe(
     String method,
     String endpoint, {
