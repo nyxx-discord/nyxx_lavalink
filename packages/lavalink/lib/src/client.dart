@@ -161,7 +161,7 @@ class LavalinkClient extends HttpLavalinkClient {
   late final LavalinkConnection _connection;
 
   /// A list of plugins used by this client.
-  List<LavalinkExternalPlugin> get plugins => List.unmodifiable(_plugins);
+  List<LavalinkExternalPlugin> get plugins => UnmodifiableListView(_plugins);
 
   final List<LavalinkExternalPlugin> _plugins;
 
