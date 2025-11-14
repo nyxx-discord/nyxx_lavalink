@@ -34,7 +34,7 @@ class HttpLavalinkClient {
     this.clientName = LavalinkClient.defaultClientName,
   });
 
-  /// An internaal method to make requests.
+  /// An internal method to make requests.
   /// This shouldn't be used by consumers but only in [LavalinkExternalPlugin].
   @experimental
   Future<String> executeSafe(
