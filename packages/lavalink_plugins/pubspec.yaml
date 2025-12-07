@@ -3,16 +3,13 @@ description: A package for lavalink that distribute bindings for some lavalin pl
 version: 1.0.0
 repository: https://github.com/nyxx-discord/nyxx_lavalink
 
-# TODO remove the path dep and shit (cant use overrides for some reason)
-publish_to: none
-
 environment:
-  sdk: ^3.0.0
+  sdk: ^3.6.0
+
+resolution: workspace
 
 dependencies:
   json_annotation: ^4.9.0
-  lavalink:
-    path: ../lavalink
 
 dev_dependencies:
   build_runner: ^2.5.4
