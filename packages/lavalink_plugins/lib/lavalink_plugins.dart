@@ -2,3 +2,4 @@
 library;
 
 export 'src/sponsorblock.dart';
+export 'src/lavalyrics.dart';
