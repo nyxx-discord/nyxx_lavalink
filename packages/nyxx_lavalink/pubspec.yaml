@@ -12,6 +12,7 @@ resolution: workspace
 
 dependencies:
   nyxx: ^6.7.0
+  lavalink: any
 
 dev_dependencies:
   lints: ^5.0.0
