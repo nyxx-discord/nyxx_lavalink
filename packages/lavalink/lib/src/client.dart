@@ -34,9 +34,9 @@ class HttpLavalinkClient {
     this.clientName = LavalinkClient.defaultClientName,
   });
 
-  /// An internaal method to make requests.
+  /// An internal method to make requests.
   /// This shouldn't be used by consumers but only in [LavalinkExternalPlugin].
-  @experimental
+  @internal
   Future<String> executeSafe(
     String method,
     String endpoint, {
@@ -161,7 +161,7 @@ class LavalinkClient extends HttpLavalinkClient {
   late final LavalinkConnection _connection;
 
   /// A list of plugins used by this client.
-  List<LavalinkExternalPlugin> get plugins => List.unmodifiable(_plugins);
+  List<LavalinkExternalPlugin> get plugins => UnmodifiableListView(_plugins);
 
   final List<LavalinkExternalPlugin> _plugins;
 
