@@ -13,7 +13,7 @@ class SponsorblockPlugin extends LavalinkExternalPlugin {
   String get name => "sponsorblock";
 
   @override
-  late final handledEvents = {
+  final Map<String, LavalinkExternalPluginEventHandler> handledEvents = {
     'SegmentsLoaded': SegmentsLoaded.fromJson,
     'SegmentSkipped': SegmentSkipped.fromJson,
     'ChaptersLoaded': ChaptersLoaded.fromJson,
