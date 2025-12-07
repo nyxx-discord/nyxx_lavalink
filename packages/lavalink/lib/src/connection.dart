@@ -103,7 +103,8 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
                       return plugin.handledEvents[type]?.call(json) ?? (throw StateError('Failed to get the handler of $type'));
                     }
 
-                    throw 'noop';
+                    throw StateError('Unbeknownst to all law of physics, we reached a point that should be unreachable ¯\\_(ツ)_/¯. Here\'s a cookie 🍪.\n'
+                        'This is a bug in lavalink package, please report it at https://github.com/nyxx-discord/nyxx_lavalink/issues');
                   })(),
                 final unknownEvent => throw FormatException('Unknown event type: $unknownEvent'),
               },
