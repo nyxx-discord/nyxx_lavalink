@@ -37,7 +37,7 @@ Map<String, dynamic> _$FiltersToJson(Filters instance) => <String, dynamic>{
     };
 
 Equalizer _$EqualizerFromJson(Map<String, dynamic> json) => Equalizer(
-      band: json['band'] as int,
+      band: (json['band'] as num).toInt(),
       gain: (json['gain'] as num).toDouble(),
     );
 

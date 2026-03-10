@@ -37,3 +37,4 @@ coverage.json
 lcov.info
 pubspec.lock
 application.yml.example
+tmp

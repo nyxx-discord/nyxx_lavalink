@@ -22,3 +22,4 @@ export 'src/messages/events/track_stuck.dart';
 export 'src/messages/events/track_start.dart';
 export 'src/messages/events/track_exception.dart';
 export 'src/messages/events/track_end.dart';
+export 'src/plugin.dart';

@@ -9,7 +9,7 @@ part of 'player.dart';
 Player _$PlayerFromJson(Map<String, dynamic> json) => Player(
       guildId: json['guildId'] as String,
       track: json['track'] == null ? null : Track.fromJson(json['track'] as Map<String, dynamic>),
-      volume: json['volume'] as int,
+      volume: (json['volume'] as num).toInt(),
       isPaused: json['paused'] as bool,
       state: PlayerState.fromJson(json['state'] as Map<String, dynamic>),
       voice: VoiceState.fromJson(json['voice'] as Map<String, dynamic>),
