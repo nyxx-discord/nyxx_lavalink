@@ -7,9 +7,9 @@ part of 'lyrics_found_event.dart';
 // **************************************************************************
 
 LyricsFoundEvent _$LyricsFoundEventFromJson(Map<String, dynamic> json) => LyricsFoundEvent(
-      client: identity(json['client'] as LavalinkClient),
-      opType: json['op'] as String,
-      type: json['type'] as String,
-      guildId: json['guildId'] as String,
-      lyrics: Lyrics.fromJson(json['lyrics'] as Map<String, dynamic>),
-    );
+  client: identity(json['client'] as LavalinkClient),
+  opType: json['op'] as String,
+  type: json['type'] as String,
+  guildId: json['guildId'] as String,
+  lyrics: Lyrics.fromJson(json['lyrics'] as Map<String, dynamic>),
+);

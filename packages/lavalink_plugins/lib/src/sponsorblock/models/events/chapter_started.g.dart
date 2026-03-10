@@ -7,9 +7,9 @@ part of 'chapter_started.dart';
 // **************************************************************************
 
 ChapterStarted _$ChapterStartedFromJson(Map<String, dynamic> json) => ChapterStarted(
-      client: identity(json['client'] as LavalinkClient),
-      guildId: json['guildId'] as String,
-      opType: json['op'] as String,
-      type: json['type'] as String,
-      chapter: Chapter.fromJson(json['chapter'] as Map<String, dynamic>),
-    );
+  client: identity(json['client'] as LavalinkClient),
+  guildId: json['guildId'] as String,
+  opType: json['op'] as String,
+  type: json['type'] as String,
+  chapter: Chapter.fromJson(json['chapter'] as Map<String, dynamic>),
+);

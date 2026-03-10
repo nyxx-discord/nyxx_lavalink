@@ -15,12 +15,7 @@ class LavalinkReadyMessage extends LavalinkMessage {
   final String sessionId;
 
   /// Create a new [LavalinkReadyMessage].
-  LavalinkReadyMessage({
-    required super.client,
-    required super.opType,
-    required this.wasResumed,
-    required this.sessionId,
-  });
+  LavalinkReadyMessage({required super.client, required super.opType, required this.wasResumed, required this.sessionId});
 
   factory LavalinkReadyMessage.fromJson(Map<String, Object?> json) => _$LavalinkReadyMessageFromJson(json);
 }

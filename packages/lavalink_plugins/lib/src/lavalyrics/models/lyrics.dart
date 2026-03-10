@@ -21,13 +21,7 @@ class Lyrics {
   /// Additional plugin specific data.
   final Map<String, Object?> plugin;
 
-  const Lyrics({
-    required this.sourceName,
-    required this.provider,
-    required this.text,
-    required this.lines,
-    required this.plugin,
-  });
+  const Lyrics({required this.sourceName, required this.provider, required this.text, required this.lines, required this.plugin});
 
   factory Lyrics.fromJson(Map<String, Object?> json) => _$LyricsFromJson(json);
 }

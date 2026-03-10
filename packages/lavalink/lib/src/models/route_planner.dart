@@ -87,11 +87,7 @@ class FailingAddress {
   /// A human-readable string containing the time at which the address failed.
   final String failingTime;
 
-  FailingAddress({
-    required this.failingAddress,
-    required this.failingTimestamp,
-    required this.failingTime,
-  });
+  FailingAddress({required this.failingAddress, required this.failingTimestamp, required this.failingTime});
 
   factory FailingAddress.fromJson(Map<String, Object?> json) => _$FailingAddressFromJson(json);
 }

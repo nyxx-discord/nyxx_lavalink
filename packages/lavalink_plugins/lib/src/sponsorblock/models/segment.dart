@@ -19,11 +19,7 @@ class Segment {
   @JsonKey(fromJson: durationFromMilliseconds)
   final Duration end;
 
-  const Segment({
-    required this.category,
-    required this.start,
-    required this.end,
-  });
+  const Segment({required this.category, required this.start, required this.end});
 
   factory Segment.fromJson(Map<String, Object?> json) => _$SegmentFromJson(json);
 }

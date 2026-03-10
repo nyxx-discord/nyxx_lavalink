@@ -9,10 +9,5 @@ abstract class LavalinkEvent extends LavalinkMessage {
   final String guildId;
 
   /// Create a new [LavalinkEvent].
-  LavalinkEvent({
-    required super.client,
-    required super.opType,
-    required this.type,
-    required this.guildId,
-  });
+  LavalinkEvent({required super.client, required super.opType, required this.type, required this.guildId});
 }

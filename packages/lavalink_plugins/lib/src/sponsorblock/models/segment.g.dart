@@ -7,10 +7,10 @@ part of 'segment.dart';
 // **************************************************************************
 
 Segment _$SegmentFromJson(Map<String, dynamic> json) => Segment(
-      category: $enumDecode(_$SegmentCategoryEnumMap, json['category']),
-      start: durationFromMilliseconds((json['start'] as num).toInt()),
-      end: durationFromMilliseconds((json['end'] as num).toInt()),
-    );
+  category: $enumDecode(_$SegmentCategoryEnumMap, json['category']),
+  start: durationFromMilliseconds((json['start'] as num).toInt()),
+  end: durationFromMilliseconds((json['end'] as num).toInt()),
+);
 
 const _$SegmentCategoryEnumMap = {
   SegmentCategory.sponsor: 'sponsor',

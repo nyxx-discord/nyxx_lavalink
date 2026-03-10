@@ -15,12 +15,7 @@ class PlayerUpdateMessage extends LavalinkMessage {
   final PlayerState state;
 
   /// Create a new [PlayerUpdateMessage].
-  PlayerUpdateMessage({
-    required super.client,
-    required super.opType,
-    required this.guildId,
-    required this.state,
-  });
+  PlayerUpdateMessage({required super.client, required super.opType, required this.guildId, required this.state});
 
   factory PlayerUpdateMessage.fromJson(Map<String, Object?> json) => _$PlayerUpdateMessageFromJson(json);
 }

@@ -14,11 +14,7 @@ class StreamForwarder<T> {
   Stream<T> get stream => controller.stream;
 
   StreamForwarder(this.sourceStream) {
-    subscription = sourceStream.listen(
-      controller.add,
-      onError: controller.addError,
-      onDone: controller.close,
-    );
+    subscription = sourceStream.listen(controller.add, onError: controller.addError, onDone: controller.close);
   }
 
   Future<void> close() async {
@@ -83,20 +79,10 @@ class LavalinkPlayer {
 
   /// The current state of this player.
   PlayerState get state => _state;
-  PlayerState _state = PlayerState(
-    time: DateTime.timestamp(),
-    position: Duration.zero,
-    isConnected: false,
-    ping: Duration.zero,
-  );
+  PlayerState _state = PlayerState(time: DateTime.timestamp(), position: Duration.zero, isConnected: false, ping: Duration.zero);
 
   /// Create a new [LavalinkPlayer].
-  LavalinkPlayer({
-    required this.client,
-    required this.lavalinkClient,
-    required this.plugin,
-    required this.guildId,
-  }) {
+  LavalinkPlayer({required this.client, required this.lavalinkClient, required this.plugin, required this.guildId}) {
     onTrackEnd.listen((event) => _currentTrack = null);
     onTrackStart.listen((event) => _currentTrack = event.track);
     onUpdate.listen((event) => _state = event.state);
@@ -108,14 +94,7 @@ class LavalinkPlayer {
   /// Disconnect this player from the voice channel and destroy it.
   Future<void> disconnect() async {
     await lavalinkClient.deletePlayer(guildId.toString());
-    client.gateway.updateVoiceState(
-      guildId,
-      GatewayVoiceStateBuilder(
-        channelId: null,
-        isMuted: false,
-        isDeafened: false,
-      ),
-    );
+    client.gateway.updateVoiceState(guildId, GatewayVoiceStateBuilder(channelId: null, isMuted: false, isDeafened: false));
 
     await Future.wait([
       _onTrackEndController.close(),

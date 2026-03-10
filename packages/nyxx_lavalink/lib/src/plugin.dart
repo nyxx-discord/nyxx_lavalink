@@ -80,10 +80,7 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
   ///
   /// Using this constructor means every nyxx client attached to this plugin will use the provided Lavalink client. The Lavalink client will not be closed when
   /// nyxx clients are closed.
-  LavalinkPlugin.usingClient(LavalinkClient this._customClient)
-      : base = _customClient.base,
-        password = _customClient.password,
-        plugins = null;
+  LavalinkPlugin.usingClient(LavalinkClient this._customClient) : base = _customClient.base, password = _customClient.password, plugins = null;
 
   @override
   NyxxPluginState<NyxxGateway, LavalinkPlugin> createState() => _LavalinkPluginState(this);
@@ -92,14 +89,7 @@ class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
   ///
   /// The returned [LavalinkPlayer] can be used to control the player in the channel.
   Future<LavalinkPlayer> connect(NyxxGateway client, Snowflake channelId, Snowflake guildId) async {
-    client.gateway.updateVoiceState(
-      guildId,
-      GatewayVoiceStateBuilder(
-        channelId: channelId,
-        isMuted: false,
-        isDeafened: false,
-      ),
-    );
+    client.gateway.updateVoiceState(guildId, GatewayVoiceStateBuilder(channelId: channelId, isMuted: false, isDeafened: false));
 
     return await onPlayerConnected.firstWhere((player) => player.guildId == guildId);
   }
@@ -146,7 +136,8 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
   Future<void> afterConnect(NyxxGateway client) async {
     await super.afterConnect(client);
 
-    lavalinkClient = plugin._customClient ??
+    lavalinkClient =
+        plugin._customClient ??
         await LavalinkClient.connect(
           plugin.base,
           password: plugin.password,
@@ -155,11 +146,7 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
           plugins: plugin.plugins,
         );
 
-    lavalinkClient!.connection.listen(
-      plugin._messagesController.add,
-      onError: plugin._messagesController.addError,
-      cancelOnError: false,
-    );
+    lavalinkClient!.connection.listen(plugin._messagesController.add, onError: plugin._messagesController.addError, cancelOnError: false);
 
     client.onVoiceServerUpdate.listen((event) {
       _voiceServers[event.guildId] = event;
@@ -215,19 +202,10 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
 
     await lavalinkClient!.updatePlayer(
       guildId.toString(),
-      voice: lavalink.VoiceState(
-        endpoint: voiceServer.endpoint!,
-        sessionId: voiceState.sessionId,
-        token: voiceServer.token,
-      ),
+      voice: lavalink.VoiceState(endpoint: voiceServer.endpoint!, sessionId: voiceState.sessionId, token: voiceServer.token),
     );
 
-    plugin._playerConnectedController.add(LavalinkPlayer(
-      client: client,
-      lavalinkClient: lavalinkClient!,
-      plugin: plugin,
-      guildId: guildId,
-    ));
+    plugin._playerConnectedController.add(LavalinkPlayer(client: client, lavalinkClient: lavalinkClient!, plugin: plugin, guildId: guildId));
   }
 
   @override

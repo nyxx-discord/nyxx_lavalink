@@ -13,13 +13,7 @@ class TrackStartEvent extends LavalinkEvent {
   final Track track;
 
   /// Create a new [TrackStartEvent].
-  TrackStartEvent({
-    required super.client,
-    required super.opType,
-    required super.type,
-    required super.guildId,
-    required this.track,
-  });
+  TrackStartEvent({required super.client, required super.opType, required super.type, required super.guildId, required this.track});
 
   factory TrackStartEvent.fromJson(Map<String, Object?> json) => _$TrackStartEventFromJson(json);
 }

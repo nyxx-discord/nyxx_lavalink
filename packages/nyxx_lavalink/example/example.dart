@@ -4,10 +4,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 
 void main() async {
-  final lavalink = LavalinkPlugin(
-    base: Uri.http('localhost:2333'),
-    password: 'youshallnotpass',
-  );
+  final lavalink = LavalinkPlugin(base: Uri.http('localhost:2333'), password: 'youshallnotpass');
 
   final client = await Nyxx.connectGateway(
     Platform.environment['TOKEN']!,
