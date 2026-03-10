@@ -90,6 +90,22 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
                 'TrackExceptionEvent' => TrackExceptionEvent.fromJson(json),
                 'TrackStuckEvent' => TrackStuckEvent.fromJson(json),
                 'WebSocketClosedEvent' => WebSocketClosedEvent.fromJson(json),
+                final String type => (() {
+                    if (!client.plugins.any(
+                      (plugin) => plugin.handledEvents.keys.contains(type),
+                    )) {
+                      throw FormatException('Unknown event type: $type');
+                    }
+
+                    final plugins = client.plugins.where((plugin) => plugin.handledEvents.keys.contains(type));
+
+                    for (final plugin in plugins) {
+                      return plugin.handledEvents[type]?.call(json) ?? (throw StateError('Failed to get the handler of $type'));
+                    }
+
+                    throw StateError('Unbeknownst to all law of physics, we reached a point that should be unreachable ¯\\_(ツ)_/¯. Here\'s a cookie 🍪.\n'
+                        'This is a bug in lavalink package, please report it at https://github.com/nyxx-discord/nyxx_lavalink/issues');
+                  })(),
                 final unknownEvent => throw FormatException('Unknown event type: $unknownEvent'),
               },
             final unknownMessage => throw FormatException('Unknown message type: $unknownMessage')

@@ -24,7 +24,7 @@ Playlist _$PlaylistFromJson(Map<String, dynamic> json) => Playlist(
 
 PlaylistInfo _$PlaylistInfoFromJson(Map<String, dynamic> json) => PlaylistInfo(
       name: json['name'] as String,
-      selectedTrack: json['selectedTrack'] as int,
+      selectedTrack: (json['selectedTrack'] as num).toInt(),
     );
 
 SearchLoadResult _$SearchLoadResultFromJson(Map<String, dynamic> json) => SearchLoadResult(
