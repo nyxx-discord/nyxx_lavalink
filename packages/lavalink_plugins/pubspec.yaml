@@ -1,0 +1,19 @@
+name: lavalink_plugins
+description: A package for lavalink that distribute bindings for some lavalin plugins
+version: 1.0.0
+repository: https://github.com/nyxx-discord/nyxx_lavalink
+
+environment:
+  sdk: ^3.6.0
+
+resolution: workspace
+
+dependencies:
+  json_annotation: ^4.11.0
+  lavalink: ^1.1.0
+
+dev_dependencies:
+  build_runner: ^2.12.2
+  json_serializable: ^6.13.0
+  lints: ^5.1.1
+  test: ^1.30.0
