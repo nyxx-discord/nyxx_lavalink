@@ -15,7 +15,7 @@ extension StreamExtension<T> on Stream<T> {
 /// A plugin that adds Lavalink support to [NyxxGateway] clients.
 class LavalinkPlugin extends NyxxPlugin<NyxxGateway> {
   /// The current version of `nyxx_lavalink`.
-  static const version = '4.0.0';
+  static const version = '4.1.0';
 
   /// The default client name used when connecting to lavalink.
   static const clientName = 'nyxx_lavalink/$version';
@@ -215,7 +215,7 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
     await super.beforeClose(client);
     if (plugin._customClient == null) {
       // We are using our own client.
-      await lavalinkClient!.close();
+      await lavalinkClient?.close();
     }
   }
 }
