@@ -195,14 +195,16 @@ class _LavalinkPluginState extends NyxxPluginState<NyxxGateway, LavalinkPlugin> 
 
     if (voiceState == null || voiceServer == null) return;
 
-    if (voiceServer.endpoint == null) {
-      // TODO: Handle this case properly
-      return;
-    }
+    assert(voiceServer.endpoint != null && voiceState.channelId != null);
 
     await lavalinkClient!.updatePlayer(
       guildId.toString(),
-      voice: lavalink.VoiceState(endpoint: voiceServer.endpoint!, sessionId: voiceState.sessionId, token: voiceServer.token),
+      voice: lavalink.VoiceState(
+        endpoint: voiceServer.endpoint!,
+        sessionId: voiceState.sessionId,
+        token: voiceServer.token,
+        channelId: voiceState.channelId!.toString(),
+      ),
     );
 
     plugin._playerConnectedController.add(LavalinkPlayer(client: client, lavalinkClient: lavalinkClient!, plugin: plugin, guildId: guildId));
