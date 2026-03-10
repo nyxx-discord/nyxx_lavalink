@@ -50,6 +50,9 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
   }
 
   Future<void> _run() async {
+    var didConnectOnce = false;
+    var remainingTries = 5;
+
     while (!_closing) {
       try {
         _webSocket = await WebSocket.connect(
@@ -61,6 +64,8 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
             if (_sessionId != null) 'Session-Id': _sessionId!,
           },
         );
+
+        didConnectOnce = true;
 
         await for (final message in _webSocket!) {
           assert(message is String);
@@ -110,7 +115,13 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
           }
         }
       } catch (error, stack) {
+        remainingTries--;
+        if (!didConnectOnce && remainingTries <= 0) {
+          rethrow;
+        }
+
         _messagesController.addError(error, stack);
+        await Future.delayed(Duration(milliseconds: 100));
       }
     }
 
