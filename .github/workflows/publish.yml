@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: [lavalink, nyxx_lavalink]
+        package: [lavalink, nyxx_lavalink, lavalink_plugins]
 
     steps:
       - name: Checkout
@@ -24,24 +24,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pubspec-
 
-      - name: 'publish ${{ matrix.package }} package to pub.dev'
+      - name: "publish ${{ matrix.package }} package to pub.dev"
         id: publish
         uses: k-paxian/dart-package-publisher@master
-        working-directory: packages/${{ matrix.package }}
         with:
           skipTests: true
           force: true
           suppressBuildRunner: true
           credentialJson: ${{ secrets.CREDENTIAL_JSON }}
+          relativePath: packages/${{ matrix.package }}
 
-      - name: 'Commit release tag'
+      - name: "Commit release tag"
         if: steps.publish.outputs.success
         uses: hole19/git-tag-action@master
         env:
           TAG: ${{steps.publish.outputs.package}}-${{steps.publish.outputs.localVersion}}
           GITHUB_TOKEN: ${{ secrets.TAG_RELEASE_TOKEN }}
 
-      - name: 'Create Release'
+      - name: "Create Release"
         if: steps.publish.outputs.success
         uses: actions/create-release@v1
         env:
