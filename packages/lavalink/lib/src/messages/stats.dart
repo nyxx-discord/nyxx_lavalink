@@ -15,11 +15,7 @@ class StatsMessage extends LavalinkMessage {
   final LavalinkStats stats;
 
   /// Create a new [StatsMessage].
-  StatsMessage({
-    required super.client,
-    required super.opType,
-    required this.stats,
-  });
+  StatsMessage({required super.client, required super.opType, required this.stats});
 
   factory StatsMessage.fromJson(Map<String, Object?> json) => _$StatsMessageFromJson(json);
 }

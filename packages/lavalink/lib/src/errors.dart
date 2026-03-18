@@ -19,14 +19,7 @@ class LavalinkException implements Exception {
   final String path;
 
   /// Create a new [LavalinkException].
-  LavalinkException({
-    required this.timestamp,
-    required this.status,
-    required this.error,
-    required this.trace,
-    required this.message,
-    required this.path,
-  });
+  LavalinkException({required this.timestamp, required this.status, required this.error, required this.trace, required this.message, required this.path});
 
   @override
   String toString() => 'LavalinkException: $error ($status): $message';

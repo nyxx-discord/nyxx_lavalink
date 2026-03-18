@@ -7,8 +7,8 @@ part of 'player_update.dart';
 // **************************************************************************
 
 PlayerUpdateMessage _$PlayerUpdateMessageFromJson(Map<String, dynamic> json) => PlayerUpdateMessage(
-      client: identity(json['client'] as LavalinkClient),
-      opType: json['op'] as String,
-      guildId: json['guildId'] as String,
-      state: PlayerState.fromJson(json['state'] as Map<String, dynamic>),
-    );
+  client: identity(json['client'] as LavalinkClient),
+  opType: json['op'] as String,
+  guildId: json['guildId'] as String,
+  state: PlayerState.fromJson(json['state'] as Map<String, dynamic>),
+);

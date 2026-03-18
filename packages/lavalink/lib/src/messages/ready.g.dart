@@ -7,8 +7,8 @@ part of 'ready.dart';
 // **************************************************************************
 
 LavalinkReadyMessage _$LavalinkReadyMessageFromJson(Map<String, dynamic> json) => LavalinkReadyMessage(
-      client: identity(json['client'] as LavalinkClient),
-      opType: json['op'] as String,
-      wasResumed: json['resumed'] as bool,
-      sessionId: json['sessionId'] as String,
-    );
+  client: identity(json['client'] as LavalinkClient),
+  opType: json['op'] as String,
+  wasResumed: json['resumed'] as bool,
+  sessionId: json['sessionId'] as String,
+);
