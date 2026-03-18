@@ -29,32 +29,16 @@ class HttpLavalinkClient {
   /// The HTTP client used by this client.
   final http.Client httpClient = http.Client();
 
-  HttpLavalinkClient({
-    required this.base,
-    required this.password,
-    this.clientName = LavalinkClient.defaultClientName,
-  });
+  HttpLavalinkClient({required this.base, required this.password, this.clientName = LavalinkClient.defaultClientName});
 
   /// An internal method to make requests.
   /// This shouldn't be used by consumers but only in [LavalinkExternalPlugin].
   @internal
-  Future<String> executeSafe(
-    String method,
-    String endpoint, {
-    bool trace = false,
-    Object? body,
-    Map<String, String>? queryParameters,
-  }) async {
+  Future<String> executeSafe(String method, String endpoint, {bool trace = false, Object? body, Map<String, String>? queryParameters}) async {
     // Avoid resetting the path of the base URI
     if (endpoint.startsWith('/')) endpoint = endpoint.substring(1);
 
-    final uri = base.resolveUri(Uri(
-      path: endpoint,
-      queryParameters: {
-        if (trace) 'trace': 'true',
-        ...?queryParameters,
-      },
-    ));
+    final uri = base.resolveUri(Uri(path: endpoint, queryParameters: {if (trace) 'trace': 'true', ...?queryParameters}));
 
     final request = http.Request(method, uri)
       ..headers['Authorization'] = password
@@ -68,7 +52,7 @@ class HttpLavalinkClient {
       final parsedBody = jsonDecode(bodyText);
 
       throw LavalinkException(
-        timestamp: DateTime.fromMicrosecondsSinceEpoch(parsedBody['timestamp'] as int),
+        timestamp: DateTime.fromMillisecondsSinceEpoch(parsedBody['timestamp'] as int),
         status: parsedBody['status'] as int,
         error: parsedBody['error'] as String,
         trace: parsedBody['trace'] as String?,
@@ -82,21 +66,13 @@ class HttpLavalinkClient {
 
   /// Load one or more tracks from an identifier.
   Future<LoadResult> loadTrack(String identifier) async {
-    final response = jsonDecode(await executeSafe(
-      'GET',
-      '/v4/loadtracks',
-      queryParameters: {'identifier': identifier},
-    ));
+    final response = jsonDecode(await executeSafe('GET', '/v4/loadtracks', queryParameters: {'identifier': identifier}));
     return LoadResult.fromJson(response as Map<String, Object?>);
   }
 
   /// Decode a track from its encoded form.
   Future<Track> decodeTrack(String encodedTrack) async {
-    final response = jsonDecode(await executeSafe(
-      'GET',
-      '/v4/decodetrack',
-      queryParameters: {'encodedTrack': encodedTrack},
-    ));
+    final response = jsonDecode(await executeSafe('GET', '/v4/decodetrack', queryParameters: {'encodedTrack': encodedTrack}));
     return Track.fromJson(response as Map<String, Object?>);
   }
 
@@ -129,11 +105,7 @@ class HttpLavalinkClient {
 
   /// Unmark a failed address in the RoutePlanner extension.
   Future<void> unmarkFailedAddress(String address) async {
-    await executeSafe(
-      'POST',
-      '/v4/routeplanner/free/address',
-      body: {'address': address},
-    );
+    await executeSafe('POST', '/v4/routeplanner/free/address', body: {'address': address});
   }
 
   /// Unmark all failed addresses in the RoutePlanner extension.
@@ -149,7 +121,7 @@ class HttpLavalinkClient {
 /// exposing events received from the server.
 class LavalinkClient extends HttpLavalinkClient {
   /// The current version of `package:lavalink`.
-  static const version = '1.0.0';
+  static const version = '1.1.0';
 
   /// The default client name used by this package.
   static const defaultClientName = 'Dart-Lavalink/$version';
@@ -185,13 +157,7 @@ class LavalinkClient extends HttpLavalinkClient {
     // Ensure the path will be used as a directory in resolve()
     if (!base.path.endsWith('/')) base = base.replace(path: '${base.path}/');
 
-    final client = LavalinkClient._(
-      base: base,
-      password: password,
-      userId: userId,
-      clientName: clientName,
-      plugins: [],
-    );
+    final client = LavalinkClient._(base: base, password: password, userId: userId, clientName: clientName, plugins: []);
 
     client._plugins.addAll(plugins?.call(client) ?? []);
 
@@ -208,10 +174,7 @@ class LavalinkClient extends HttpLavalinkClient {
 
   /// Get the player for a given guild.
   Future<Player> getPlayer(String guildId) async {
-    final response = jsonDecode(await executeSafe(
-      'GET',
-      '/v4/sessions/${connection.sessionId}/players/$guildId',
-    ));
+    final response = jsonDecode(await executeSafe('GET', '/v4/sessions/${connection.sessionId}/players/$guildId'));
     return Player.fromJson(response as Map<String, Object?>);
   }
 
@@ -227,21 +190,25 @@ class LavalinkClient extends HttpLavalinkClient {
     bool? isPaused,
     Filters? filters,
     VoiceState? voice,
+    Map<String, Object?>? userData,
   }) async {
-    final response = jsonDecode(await executeSafe(
-      'PATCH',
-      '/v4/sessions/${connection.sessionId}/players/$guildId',
-      body: {
-        if (!identical(encodedTrack, _sentinelString)) 'encodedTrack': encodedTrack,
-        if (identifier != null) 'identifier': identifier,
-        if (position != null) 'position': position.inMilliseconds,
-        if (!identical(endTime, _sentinelDuration)) 'endTime': endTime?.inMilliseconds,
-        if (volume != null) 'volume': volume,
-        if (isPaused != null) 'paused': isPaused,
-        if (filters != null) 'filters': filters.toJson(),
-        if (voice != null) 'voice': voice.toJson(),
-      },
-    ));
+    final response = jsonDecode(
+      await executeSafe(
+        'PATCH',
+        '/v4/sessions/${connection.sessionId}/players/$guildId',
+        queryParameters: {'noReplace': ?noReplace?.toString()},
+        body: {
+          'track': {if (!identical(encodedTrack, _sentinelString)) 'encoded': encodedTrack, 'identifier': ?identifier, 'userData': ?userData},
+          if (position != null) 'position': position.inMilliseconds,
+          if (!identical(endTime, _sentinelDuration)) 'endTime': endTime?.inMilliseconds,
+          if (volume != null) 'volume': volume,
+          if (isPaused != null) 'paused': isPaused,
+          if (filters != null) 'filters': filters.toJson(),
+          if (voice != null) 'voice': voice.toJson(),
+        },
+      ),
+    );
+
     return Player.fromJson(response as Map<String, Object?>);
   }
 
@@ -251,23 +218,18 @@ class LavalinkClient extends HttpLavalinkClient {
   }
 
   /// Update the current session's properties.
-  Future<({bool resuming, Duration timeout})> updateSession({
-    bool? resuming,
-    Duration? timeout,
-  }) async {
-    final response = jsonDecode(await executeSafe(
-      'PATCH',
-      '/v4/sessions/${connection.sessionId}',
-      body: {
-        if (resuming != null) 'resuming': resuming,
-        if (timeout != null) 'timeout': timeout.inSeconds,
-      },
-    )) as Map<String, Object?>;
+  Future<({bool resuming, Duration timeout})> updateSession({bool? resuming, Duration? timeout}) async {
+    final response =
+        jsonDecode(
+              await executeSafe(
+                'PATCH',
+                '/v4/sessions/${connection.sessionId}',
+                body: {if (resuming != null) 'resuming': resuming, if (timeout != null) 'timeout': timeout.inSeconds},
+              ),
+            )
+            as Map<String, Object?>;
 
-    return (
-      resuming: response['resuming'] as bool,
-      timeout: Duration(seconds: response['timeout'] as int),
-    );
+    return (resuming: response['resuming'] as bool, timeout: Duration(seconds: response['timeout'] as int));
   }
 
   @override

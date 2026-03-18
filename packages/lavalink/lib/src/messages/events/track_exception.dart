@@ -40,8 +40,11 @@ class ExceptionInfo {
   /// The cause of the exception.
   final String cause;
 
+  /// The full stack trace of the cause.
+  final String causeStackTrace;
+
   /// Create a new [ExceptionInfo].
-  ExceptionInfo({required this.message, required this.severity, required this.cause});
+  ExceptionInfo({required this.message, required this.severity, required this.cause, required this.causeStackTrace});
 
   factory ExceptionInfo.fromJson(Map<String, Object?> json) => _$ExceptionInfoFromJson(json);
 }

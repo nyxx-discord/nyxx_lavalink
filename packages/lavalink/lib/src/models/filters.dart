@@ -9,6 +9,7 @@ class Filters {
   final double? volume;
 
   /// A list of equalizers applied.
+  @JsonKey(name: 'equalizer')
   final List<Equalizer>? equalizers;
 
   /// The karaoke effect applied.
@@ -89,12 +90,7 @@ class Karaoke {
   final double? filterWidth;
 
   /// Create a new [Karaoke].
-  Karaoke({
-    required this.level,
-    required this.monoLevel,
-    required this.filterBand,
-    required this.filterWidth,
-  });
+  Karaoke({required this.level, required this.monoLevel, required this.filterBand, required this.filterWidth});
 
   factory Karaoke.fromJson(Map<String, Object?> json) => _$KaraokeFromJson(json);
 }
@@ -195,12 +191,7 @@ class ChannelMix {
   final double? rightToRight;
 
   /// Create a new [ChannelMix].
-  ChannelMix({
-    required this.leftToLeft,
-    required this.leftToRight,
-    required this.rightToLeft,
-    required this.rightToRight,
-  });
+  ChannelMix({required this.leftToLeft, required this.leftToRight, required this.rightToLeft, required this.rightToRight});
 
   factory ChannelMix.fromJson(Map<String, Object?> json) => _$ChannelMixFromJson(json);
 }

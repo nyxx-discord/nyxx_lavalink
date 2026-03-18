@@ -14,7 +14,7 @@ class LavaLyricsPlugin extends LavalinkExternalPlugin {
   final Map<String, LavalinkExternalPluginEventHandler> handledEvents = {
     'LyricsFoundEvent': LyricsFoundEvent.fromJson,
     'LyricsNotFoundEvent': LyricsNotFoundEvent.fromJson,
-    'LyricsLineEvent': LyricsLineEvent.fromJson
+    'LyricsLineEvent': LyricsLineEvent.fromJson,
   };
 
   LavaLyricsPlugin(super.client);

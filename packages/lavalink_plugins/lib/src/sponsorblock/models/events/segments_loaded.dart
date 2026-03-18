@@ -10,13 +10,7 @@ class SegmentsLoaded extends LavalinkEvent {
   /// All the segments of this track.
   final List<Segment> segments;
 
-  SegmentsLoaded({
-    required super.client,
-    required super.opType,
-    required super.guildId,
-    required super.type,
-    required this.segments,
-  });
+  SegmentsLoaded({required super.client, required super.opType, required super.guildId, required super.type, required this.segments});
 
   factory SegmentsLoaded.fromJson(Map<String, Object?> json) => _$SegmentsLoadedFromJson(json);
 }

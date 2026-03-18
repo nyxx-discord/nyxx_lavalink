@@ -10,13 +10,7 @@ class SegmentSkipped extends LavalinkEvent {
   /// The segment that has been skipped.
   final Segment segment;
 
-  SegmentSkipped({
-    required super.client,
-    required super.guildId,
-    required super.opType,
-    required super.type,
-    required this.segment,
-  });
+  SegmentSkipped({required super.client, required super.guildId, required super.opType, required super.type, required this.segment});
 
   factory SegmentSkipped.fromJson(Map<String, Object?> json) => _$SegmentSkippedFromJson(json);
 }

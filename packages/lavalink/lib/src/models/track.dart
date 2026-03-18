@@ -1,3 +1,6 @@
+/// @docImport 'package:lavalink/lavalink.dart';
+library;
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lavalink/src/utils/deserializing_utils.dart';
 
@@ -15,8 +18,11 @@ class Track {
   /// Extra information about this track provided by plugins.
   final Map<String, Object?> pluginInfo;
 
+  /// Extra information about this track provided by [LavalinkClient.updatePlayer]
+  final Map<String, Object?> userData;
+
   /// Create a new [Track].
-  Track({required this.encoded, required this.info, required this.pluginInfo});
+  Track({required this.encoded, required this.info, required this.pluginInfo, required this.userData});
 
   factory Track.fromJson(Map<String, Object?> json) => _$TrackFromJson(json);
 }

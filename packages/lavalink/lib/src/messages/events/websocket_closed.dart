@@ -15,6 +15,7 @@ class WebSocketClosedEvent extends LavalinkEvent {
   final String reason;
 
   /// Whether the connection was closed by the remote server (Discord).
+  @JsonKey(name: 'byRemote')
   final bool? wasByRemote;
 
   /// Create a new [WebSocketClosedEvent].

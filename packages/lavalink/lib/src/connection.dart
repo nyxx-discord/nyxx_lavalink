@@ -45,21 +45,14 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
   }
 
   @override
-  StreamSubscription<LavalinkMessage> listen(
-    void Function(LavalinkMessage event)? onData, {
-    Function? onError,
-    void Function()? onDone,
-    bool? cancelOnError,
-  }) {
-    return _messagesController.stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError,
-    );
+  StreamSubscription<LavalinkMessage> listen(void Function(LavalinkMessage event)? onData, {Function? onError, void Function()? onDone, bool? cancelOnError}) {
+    return _messagesController.stream.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
 
   Future<void> _run() async {
+    var didConnectOnce = false;
+    var remainingTries = 5;
+
     while (!_closing) {
       try {
         _webSocket = await WebSocket.connect(
@@ -71,6 +64,8 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
             if (_sessionId != null) 'Session-Id': _sessionId!,
           },
         );
+
+        didConnectOnce = true;
 
         await for (final message in _webSocket!) {
           assert(message is String);
@@ -85,30 +80,30 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
             'playerUpdate' => PlayerUpdateMessage.fromJson(json),
             'stats' => StatsMessage.fromJson(json),
             'event' => switch (json['type']) {
-                'TrackStartEvent' => TrackStartEvent.fromJson(json),
-                'TrackEndEvent' => TrackEndEvent.fromJson(json),
-                'TrackExceptionEvent' => TrackExceptionEvent.fromJson(json),
-                'TrackStuckEvent' => TrackStuckEvent.fromJson(json),
-                'WebSocketClosedEvent' => WebSocketClosedEvent.fromJson(json),
-                final String type => (() {
-                    if (!client.plugins.any(
-                      (plugin) => plugin.handledEvents.keys.contains(type),
-                    )) {
-                      throw FormatException('Unknown event type: $type');
-                    }
+              'TrackStartEvent' => TrackStartEvent.fromJson(json),
+              'TrackEndEvent' => TrackEndEvent.fromJson(json),
+              'TrackExceptionEvent' => TrackExceptionEvent.fromJson(json),
+              'TrackStuckEvent' => TrackStuckEvent.fromJson(json),
+              'WebSocketClosedEvent' => WebSocketClosedEvent.fromJson(json),
+              final String type => (() {
+                if (!client.plugins.any((plugin) => plugin.handledEvents.keys.contains(type))) {
+                  throw FormatException('Unknown event type: $type');
+                }
 
-                    final plugins = client.plugins.where((plugin) => plugin.handledEvents.keys.contains(type));
+                final plugins = client.plugins.where((plugin) => plugin.handledEvents.keys.contains(type));
 
-                    for (final plugin in plugins) {
-                      return plugin.handledEvents[type]?.call(json) ?? (throw StateError('Failed to get the handler of $type'));
-                    }
+                for (final plugin in plugins) {
+                  return plugin.handledEvents[type]?.call(json) ?? (throw StateError('Failed to get the handler of $type'));
+                }
 
-                    throw StateError('Unbeknownst to all law of physics, we reached a point that should be unreachable ¯\\_(ツ)_/¯. Here\'s a cookie 🍪.\n'
-                        'This is a bug in lavalink package, please report it at https://github.com/nyxx-discord/nyxx_lavalink/issues');
-                  })(),
-                final unknownEvent => throw FormatException('Unknown event type: $unknownEvent'),
-              },
-            final unknownMessage => throw FormatException('Unknown message type: $unknownMessage')
+                throw StateError(
+                  'Unbeknownst to all law of physics, we reached a point that should be unreachable ¯\\_(ツ)_/¯. Here\'s a cookie 🍪.\n'
+                  'This is a bug in lavalink package, please report it at https://github.com/nyxx-discord/nyxx_lavalink/issues',
+                );
+              })(),
+              final unknownEvent => throw FormatException('Unknown event type: $unknownEvent'),
+            },
+            final unknownMessage => throw FormatException('Unknown message type: $unknownMessage'),
           };
 
           _messagesController.add(parsedMessage);
@@ -120,7 +115,13 @@ class LavalinkConnection extends Stream<LavalinkMessage> {
           }
         }
       } catch (error, stack) {
+        remainingTries--;
+        if (!didConnectOnce && remainingTries <= 0) {
+          rethrow;
+        }
+
         _messagesController.addError(error, stack);
+        await Future.delayed(Duration(milliseconds: 100));
       }
     }
 

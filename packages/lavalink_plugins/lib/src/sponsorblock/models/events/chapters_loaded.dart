@@ -10,13 +10,7 @@ class ChaptersLoaded extends LavalinkEvent {
   /// The chapters that were loaded.
   final List<Chapter> chapters;
 
-  ChaptersLoaded({
-    required super.client,
-    required super.guildId,
-    required super.opType,
-    required super.type,
-    required this.chapters,
-  });
+  ChaptersLoaded({required super.client, required super.guildId, required super.opType, required super.type, required this.chapters});
 
   factory ChaptersLoaded.fromJson(Map<String, Object?> json) => _$ChaptersLoadedFromJson(json);
 }

@@ -56,8 +56,11 @@ class VoiceState {
   /// The ID of the voice session.
   final String sessionId;
 
+  /// The Discord voice channel ID the bot is connecting to.
+  final String? channelId;
+
   /// Create a new [VoiceState].
-  VoiceState({required this.token, required this.endpoint, required this.sessionId});
+  VoiceState({required this.token, required this.endpoint, required this.sessionId, this.channelId});
 
   factory VoiceState.fromJson(Map<String, Object?> json) => _$VoiceStateFromJson(json);
 

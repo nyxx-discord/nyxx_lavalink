@@ -23,12 +23,7 @@ class Chapter {
   @JsonKey(fromJson: _durationFromStringMilliseconds)
   final Duration duration;
 
-  const Chapter({
-    required this.duration,
-    required this.end,
-    required this.name,
-    required this.start,
-  });
+  const Chapter({required this.duration, required this.end, required this.name, required this.start});
 
   factory Chapter.fromJson(Map<String, Object?> json) => _$ChapterFromJson(json);
 }

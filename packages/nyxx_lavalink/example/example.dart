@@ -4,10 +4,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 
 void main() async {
-  final lavalink = LavalinkPlugin(
-    base: Uri.http('localhost:2333'),
-    password: 'youshallnotpass',
-  );
+  final lavalink = LavalinkPlugin(base: Uri.http('localhost:2333'), password: 'youshallnotpass');
 
   final client = await Nyxx.connectGateway(
     Platform.environment['TOKEN']!,
@@ -26,7 +23,7 @@ void main() async {
 
     final player = await voiceChannel.connectLavalink();
 
-    final searchResult = await lavalink.loadTrack('ytsearch:Crab Rave');
+    final searchResult = await lavalink.loadTrack('scsearch:Crab Rave');
 
     if (searchResult is! SearchLoadResult) throw Exception('Expected search load result');
     if (searchResult.data.isEmpty) throw Exception('No tracks found');
