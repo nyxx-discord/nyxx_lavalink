@@ -10,13 +10,7 @@ class ChapterStarted extends LavalinkEvent {
   /// The chapter that's started.
   final Chapter chapter;
 
-  ChapterStarted({
-    required super.client,
-    required super.guildId,
-    required super.opType,
-    required super.type,
-    required this.chapter,
-  });
+  ChapterStarted({required super.client, required super.guildId, required super.opType, required super.type, required this.chapter});
 
   factory ChapterStarted.fromJson(Map<String, Object?> json) => _$ChapterStartedFromJson(json);
 }

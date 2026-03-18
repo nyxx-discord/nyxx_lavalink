@@ -69,14 +69,7 @@ class Version {
   final String? build;
 
   /// Create a new [Version].
-  Version({
-    required this.semver,
-    required this.major,
-    required this.minor,
-    required this.patch,
-    required this.preRelease,
-    required this.build,
-  });
+  Version({required this.semver, required this.major, required this.minor, required this.patch, required this.preRelease, required this.build});
 
   factory Version.fromJson(Map<String, Object?> json) => _$VersionFromJson(json);
 }

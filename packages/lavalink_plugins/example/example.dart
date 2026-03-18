@@ -12,9 +12,7 @@ void main(List<String> args) async {
     Uri.http('localhost:2333'),
     password: 'youshallnotpass',
     userId: '1',
-    plugins: (client) => [
-      SponsorblockPlugin(client),
-    ],
+    plugins: (client) => [SponsorblockPlugin(client)],
   );
 
   final sponsorblock = client.plugins.whereType<SponsorblockPlugin>().first;

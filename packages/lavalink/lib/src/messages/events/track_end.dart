@@ -16,14 +16,7 @@ class TrackEndEvent extends LavalinkEvent {
   final String reason;
 
   /// Create a new [TrackEndEvent].
-  TrackEndEvent({
-    required super.client,
-    required super.opType,
-    required super.type,
-    required super.guildId,
-    required this.track,
-    required this.reason,
-  });
+  TrackEndEvent({required super.client, required super.opType, required super.type, required super.guildId, required this.track, required this.reason});
 
   factory TrackEndEvent.fromJson(Map<String, Object?> json) => _$TrackEndEventFromJson(json);
 }

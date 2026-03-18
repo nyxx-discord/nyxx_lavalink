@@ -23,12 +23,7 @@ class PlayerState {
   final Duration ping;
 
   /// Create a new [PlayerState].
-  PlayerState({
-    required this.time,
-    required this.position,
-    required this.isConnected,
-    required this.ping,
-  });
+  PlayerState({required this.time, required this.position, required this.isConnected, required this.ping});
 
   factory PlayerState.fromJson(Map<String, Object?> json) => _$PlayerStateFromJson(json);
 }

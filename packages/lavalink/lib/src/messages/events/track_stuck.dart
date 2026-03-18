@@ -3,6 +3,7 @@ import 'package:lavalink/src/client.dart';
 import 'package:lavalink/src/messages/event.dart';
 import 'package:lavalink/src/messages/message.dart';
 import 'package:lavalink/src/models/track.dart';
+import 'package:lavalink/src/utils/deserializing_utils.dart';
 
 part 'track_stuck.g.dart';
 
@@ -13,17 +14,11 @@ class TrackStuckEvent extends LavalinkEvent {
   final Track track;
 
   /// The threshold that was exceeded.
+  @JsonKey(fromJson: durationFromMilliseconds)
   final Duration threshold;
 
   /// Create a new [TrackStuckEvent].
-  TrackStuckEvent({
-    required super.client,
-    required super.opType,
-    required super.type,
-    required super.guildId,
-    required this.track,
-    required this.threshold,
-  });
+  TrackStuckEvent({required super.client, required super.opType, required super.type, required super.guildId, required this.track, required this.threshold});
 
   factory TrackStuckEvent.fromJson(Map<String, Object?> json) => _$TrackStuckEventFromJson(json);
 }

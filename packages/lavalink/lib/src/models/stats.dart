@@ -24,14 +24,7 @@ class LavalinkStats {
   final FrameStats? frames;
 
   /// Create a new [LavalinkStats].
-  LavalinkStats({
-    required this.players,
-    required this.playingPlayers,
-    required this.uptime,
-    required this.memory,
-    required this.cpu,
-    required this.frames,
-  });
+  LavalinkStats({required this.players, required this.playingPlayers, required this.uptime, required this.memory, required this.cpu, required this.frames});
 
   factory LavalinkStats.fromJson(Map<String, Object?> json) => _$LavalinkStatsFromJson(json);
 }
@@ -52,12 +45,7 @@ class MemoryStats {
   final int reservable;
 
   /// Create a new [MemoryStats].
-  MemoryStats({
-    required this.free,
-    required this.used,
-    required this.allocated,
-    required this.reservable,
-  });
+  MemoryStats({required this.free, required this.used, required this.allocated, required this.reservable});
 
   factory MemoryStats.fromJson(Map<String, Object?> json) => _$MemoryStatsFromJson(json);
 }

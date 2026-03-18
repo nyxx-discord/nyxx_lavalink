@@ -21,12 +21,7 @@ class LyricLine {
   /// Additional plugin specific data.
   final Map<String, Object?> plugin;
 
-  const LyricLine({
-    required this.duration,
-    required this.line,
-    required this.plugin,
-    required this.timestamp,
-  });
+  const LyricLine({required this.duration, required this.line, required this.plugin, required this.timestamp});
 
   factory LyricLine.fromJson(Map<String, Object?> json) => _$LyricLineFromJson(json);
 }
