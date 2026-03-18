@@ -38,7 +38,7 @@ jobs:
         if: steps.publish.outputs.success
         uses: hole19/git-tag-action@master
         env:
-          TAG: ${{steps.publish.outputs.package}}-${{steps.publish.outputs.localVersion}}
+          TAG: ${{ matrix.package }}-${{steps.publish.outputs.localVersion}}
           GITHUB_TOKEN: ${{ secrets.TAG_RELEASE_TOKEN }}
 
       - name: "Create Release"
@@ -47,7 +47,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TAG_RELEASE_TOKEN }}
         with:
-          tag_name: ${{steps.publish.outputs.package}}-${{steps.publish.outputs.localVersion}}
+          tag_name: ${{ matrix.package }}-${{steps.publish.outputs.localVersion}}
           release_name: ${{steps.publish.outputs.localVersion}}
           body: See CHANGELOG.md for the changes in this version.
           draft: false
